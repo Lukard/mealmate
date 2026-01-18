@@ -1,0 +1,51 @@
+{
+  "id": "test-user-dietary",
+  "email": "test.dietary@example.com",
+  "name": "Test User Dietary Restrictions",
+  "profile": {
+    "dietType": "vegetarian",
+    "allergies": ["nuts", "shellfish"],
+    "intolerances": ["lactose", "gluten"],
+    "targetCalories": 1800,
+    "mealsPerDay": 3,
+    "cookingSkill": "advanced",
+    "budget": "high",
+    "servingsDefault": 1,
+    "preferredSupermarkets": ["Carrefour", "DIA"],
+    "brandPreferences": {
+      "preferred": ["Carrefour Bio"],
+      "avoided": []
+    },
+    "location": {
+      "postalCode": "08001",
+      "city": "Barcelona",
+      "region": "Catalonia"
+    },
+    "medicalConditions": {
+      "celiac": true,
+      "lactoseIntolerant": true
+    },
+    "excludedIngredients": [
+      "nueces",
+      "almendras",
+      "anacardos",
+      "pistachos",
+      "avellanas",
+      "gambas",
+      "langostinos",
+      "mejillones"
+    ]
+  },
+  "preferences": {
+    "notifications": true,
+    "weekStartDay": "monday",
+    "unitSystem": "metric",
+    "language": "es",
+    "showAllergenWarnings": true,
+    "strictAllergenMode": true
+  },
+  "metadata": {
+    "createdAt": "2026-01-01T10:00:00.000Z",
+    "lastLogin": "2026-01-15T08:00:00.000Z"
+  }
+}

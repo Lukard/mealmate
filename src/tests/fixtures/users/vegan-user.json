@@ -1,0 +1,51 @@
+{
+  "id": "test-user-vegan",
+  "email": "test.vegan@example.com",
+  "name": "Test User Vegan",
+  "profile": {
+    "dietType": "vegan",
+    "allergies": ["soy"],
+    "intolerances": [],
+    "targetCalories": 1900,
+    "mealsPerDay": 4,
+    "cookingSkill": "beginner",
+    "budget": "low",
+    "servingsDefault": 2,
+    "preferredSupermarkets": ["Mercadona"],
+    "brandPreferences": {
+      "preferred": [],
+      "avoided": []
+    },
+    "location": {
+      "postalCode": "46001",
+      "city": "Valencia",
+      "region": "Valencia"
+    },
+    "excludedIngredients": [
+      "carne",
+      "pollo",
+      "pescado",
+      "marisco",
+      "huevos",
+      "leche",
+      "queso",
+      "mantequilla",
+      "miel",
+      "gelatina",
+      "soja",
+      "tofu"
+    ]
+  },
+  "preferences": {
+    "notifications": false,
+    "weekStartDay": "sunday",
+    "unitSystem": "metric",
+    "language": "es",
+    "showNutritionalInfo": true,
+    "prioritizeProtein": true
+  },
+  "metadata": {
+    "createdAt": "2026-01-05T10:00:00.000Z",
+    "lastLogin": "2026-01-15T12:00:00.000Z"
+  }
+}

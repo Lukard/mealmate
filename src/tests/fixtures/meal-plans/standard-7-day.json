@@ -1,0 +1,204 @@
+{
+  "id": "test-meal-plan-standard",
+  "name": "Standard 7-Day Plan",
+  "description": "Test fixture for standard meal plan testing",
+  "userProfile": {
+    "dietType": "standard",
+    "allergies": [],
+    "intolerances": [],
+    "targetCalories": 2000,
+    "mealsPerDay": 3,
+    "cookingSkill": "intermediate",
+    "budget": "medium"
+  },
+  "days": [
+    {
+      "day": 1,
+      "dayName": "Monday",
+      "meals": {
+        "breakfast": {
+          "recipeId": "recipe-001",
+          "name": "Tostadas con Tomate",
+          "servings": 2,
+          "prepTime": 10,
+          "calories": 350,
+          "macros": { "protein": 12, "carbs": 45, "fat": 14 },
+          "ingredients": [
+            { "name": "Pan de Pueblo", "quantity": 100, "unit": "g" },
+            { "name": "Tomate Maduro", "quantity": 150, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 20, "unit": "ml" },
+            { "name": "Sal", "quantity": 1, "unit": "pinch" }
+          ]
+        },
+        "lunch": {
+          "recipeId": "recipe-002",
+          "name": "Paella de Pollo",
+          "servings": 4,
+          "prepTime": 45,
+          "calories": 650,
+          "macros": { "protein": 35, "carbs": 70, "fat": 22 },
+          "ingredients": [
+            { "name": "Arroz Bomba", "quantity": 300, "unit": "g" },
+            { "name": "Pechuga de Pollo", "quantity": 400, "unit": "g" },
+            { "name": "Judias Verdes", "quantity": 150, "unit": "g" },
+            { "name": "Garrofon", "quantity": 100, "unit": "g" },
+            { "name": "Tomate Triturado", "quantity": 200, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 60, "unit": "ml" },
+            { "name": "Azafran", "quantity": 1, "unit": "g" },
+            { "name": "Pimenton", "quantity": 5, "unit": "g" },
+            { "name": "Sal", "quantity": 1, "unit": "tsp" }
+          ]
+        },
+        "dinner": {
+          "recipeId": "recipe-003",
+          "name": "Ensalada Mixta con Atun",
+          "servings": 2,
+          "prepTime": 15,
+          "calories": 400,
+          "macros": { "protein": 28, "carbs": 20, "fat": 24 },
+          "ingredients": [
+            { "name": "Lechuga", "quantity": 200, "unit": "g" },
+            { "name": "Tomate", "quantity": 150, "unit": "g" },
+            { "name": "Atun en Conserva", "quantity": 160, "unit": "g" },
+            { "name": "Cebolla", "quantity": 50, "unit": "g" },
+            { "name": "Aceitunas", "quantity": 50, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 30, "unit": "ml" },
+            { "name": "Vinagre", "quantity": 15, "unit": "ml" }
+          ]
+        }
+      },
+      "totalNutrition": {
+        "calories": 1400,
+        "protein": 75,
+        "carbs": 135,
+        "fat": 60
+      }
+    },
+    {
+      "day": 2,
+      "dayName": "Tuesday",
+      "meals": {
+        "breakfast": {
+          "recipeId": "recipe-004",
+          "name": "Yogur con Frutas y Cereales",
+          "servings": 1,
+          "prepTime": 5,
+          "calories": 380,
+          "macros": { "protein": 15, "carbs": 55, "fat": 12 },
+          "ingredients": [
+            { "name": "Yogur Natural", "quantity": 250, "unit": "g" },
+            { "name": "Platano", "quantity": 100, "unit": "g" },
+            { "name": "Fresas", "quantity": 100, "unit": "g" },
+            { "name": "Cereales Integrales", "quantity": 40, "unit": "g" },
+            { "name": "Miel", "quantity": 15, "unit": "ml" }
+          ]
+        },
+        "lunch": {
+          "recipeId": "recipe-005",
+          "name": "Lentejas Estofadas",
+          "servings": 4,
+          "prepTime": 50,
+          "calories": 550,
+          "macros": { "protein": 28, "carbs": 65, "fat": 18 },
+          "ingredients": [
+            { "name": "Lentejas", "quantity": 400, "unit": "g" },
+            { "name": "Chorizo", "quantity": 100, "unit": "g" },
+            { "name": "Patata", "quantity": 200, "unit": "g" },
+            { "name": "Zanahoria", "quantity": 100, "unit": "g" },
+            { "name": "Cebolla", "quantity": 100, "unit": "g" },
+            { "name": "Pimiento Verde", "quantity": 50, "unit": "g" },
+            { "name": "Tomate Triturado", "quantity": 100, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 30, "unit": "ml" },
+            { "name": "Pimenton", "quantity": 5, "unit": "g" },
+            { "name": "Laurel", "quantity": 2, "unit": "leaves" }
+          ]
+        },
+        "dinner": {
+          "recipeId": "recipe-006",
+          "name": "Tortilla Espanola",
+          "servings": 4,
+          "prepTime": 35,
+          "calories": 450,
+          "macros": { "protein": 18, "carbs": 30, "fat": 28 },
+          "ingredients": [
+            { "name": "Huevos", "quantity": 6, "unit": "units" },
+            { "name": "Patata", "quantity": 500, "unit": "g" },
+            { "name": "Cebolla", "quantity": 150, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 100, "unit": "ml" },
+            { "name": "Sal", "quantity": 1, "unit": "tsp" }
+          ]
+        }
+      },
+      "totalNutrition": {
+        "calories": 1380,
+        "protein": 61,
+        "carbs": 150,
+        "fat": 58
+      }
+    },
+    {
+      "day": 3,
+      "dayName": "Wednesday",
+      "meals": {
+        "breakfast": {
+          "recipeId": "recipe-001",
+          "name": "Tostadas con Tomate",
+          "servings": 2,
+          "prepTime": 10,
+          "calories": 350,
+          "macros": { "protein": 12, "carbs": 45, "fat": 14 }
+        },
+        "lunch": {
+          "recipeId": "recipe-007",
+          "name": "Pollo al Horno con Verduras",
+          "servings": 4,
+          "prepTime": 60,
+          "calories": 580,
+          "macros": { "protein": 42, "carbs": 25, "fat": 35 },
+          "ingredients": [
+            { "name": "Muslos de Pollo", "quantity": 800, "unit": "g" },
+            { "name": "Patata", "quantity": 400, "unit": "g" },
+            { "name": "Cebolla", "quantity": 200, "unit": "g" },
+            { "name": "Pimiento Rojo", "quantity": 150, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 50, "unit": "ml" },
+            { "name": "Romero", "quantity": 5, "unit": "g" },
+            { "name": "Ajo", "quantity": 4, "unit": "cloves" }
+          ]
+        },
+        "dinner": {
+          "recipeId": "recipe-008",
+          "name": "Crema de Calabacin",
+          "servings": 4,
+          "prepTime": 30,
+          "calories": 280,
+          "macros": { "protein": 8, "carbs": 22, "fat": 18 },
+          "ingredients": [
+            { "name": "Calabacin", "quantity": 600, "unit": "g" },
+            { "name": "Patata", "quantity": 200, "unit": "g" },
+            { "name": "Cebolla", "quantity": 100, "unit": "g" },
+            { "name": "Queso Crema", "quantity": 50, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 30, "unit": "ml" },
+            { "name": "Caldo de Verduras", "quantity": 500, "unit": "ml" }
+          ]
+        }
+      },
+      "totalNutrition": {
+        "calories": 1210,
+        "protein": 62,
+        "carbs": 92,
+        "fat": 67
+      }
+    }
+  ],
+  "weeklyNutrition": {
+    "averageCalories": 1330,
+    "averageProtein": 66,
+    "averageCarbs": 126,
+    "averageFat": 62
+  },
+  "metadata": {
+    "createdAt": "2026-01-15T10:00:00.000Z",
+    "updatedAt": "2026-01-15T10:00:00.000Z",
+    "version": 1
+  }
+}

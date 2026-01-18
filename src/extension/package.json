@@ -1,0 +1,50 @@
+{
+  "name": "@meal-automation/extension",
+  "displayName": "__MSG_extName__",
+  "version": "1.0.0",
+  "description": "__MSG_extDescription__",
+  "author": "MealMate Team <support@mealmate.app>",
+  "homepage": "https://mealmate.app",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv3",
+    "package": "plasmo package",
+    "type-check": "tsc --noEmit",
+    "build:store": "./scripts/build-for-store.sh"
+  },
+  "dependencies": {
+    "@meal-automation/shared": "*",
+    "@plasmohq/messaging": "^0.6.2",
+    "@plasmohq/storage": "^1.11.0",
+    "plasmo": "^0.89.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.254",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "typescript": "^5.3.0"
+  },
+  "manifest": {
+    "name": "__MSG_extName__",
+    "description": "__MSG_extDescription__",
+    "version": "1.0.0",
+    "default_locale": "es",
+    "host_permissions": [
+      "https://www.dia.es/*",
+      "https://dia.es/*",
+      "https://tienda.mercadona.es/*",
+      "https://www.mercadona.es/*",
+      "https://www.carrefour.es/*"
+    ],
+    "permissions": [
+      "storage",
+      "activeTab",
+      "scripting",
+      "tabs",
+      "alarms"
+    ]
+  }
+}

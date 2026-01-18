@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@meal-automation/shared": ["./src/shared/src"],
+      "@meal-automation/shared/*": ["./src/shared/src/*"],
+      "@meal-automation/core": ["./src/core/src"],
+      "@meal-automation/core/*": ["./src/core/src/*"],
+      "@meal-automation/scraper": ["./src/scraper/src"],
+      "@meal-automation/scraper/*": ["./src/scraper/src/*"],
+      "@meal-automation/api": ["./src/api/src"],
+      "@meal-automation/api/*": ["./src/api/src/*"]
+    },
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

@@ -1,0 +1,244 @@
+{
+  "extName": {
+    "message": "MealMate - Automatizacion de Compras",
+    "description": "Extension name shown in Chrome"
+  },
+  "extDescription": {
+    "message": "Automatiza tu lista de la compra en supermercados espanoles. Compatible con DIA, Mercadona, Carrefour y mas.",
+    "description": "Extension description shown in Chrome Web Store"
+  },
+  "addToCart": {
+    "message": "Anadir al carrito",
+    "description": "Button text to add items to cart"
+  },
+  "groceryList": {
+    "message": "Lista de la compra",
+    "description": "Tab name for grocery list"
+  },
+  "settings": {
+    "message": "Configuracion",
+    "description": "Tab name for settings"
+  },
+  "status": {
+    "message": "Estado",
+    "description": "Tab name for status"
+  },
+  "sync": {
+    "message": "Sincronizar",
+    "description": "Button text to sync grocery list"
+  },
+  "syncing": {
+    "message": "Sincronizando...",
+    "description": "Loading text while syncing"
+  },
+  "loading": {
+    "message": "Cargando...",
+    "description": "Generic loading text"
+  },
+  "emptyList": {
+    "message": "Tu lista de la compra esta vacia",
+    "description": "Message when grocery list is empty"
+  },
+  "noListFound": {
+    "message": "No se encontro lista de la compra",
+    "description": "Message when no grocery list exists"
+  },
+  "syncFromApp": {
+    "message": "Sincronizar desde la App",
+    "description": "Button text to sync from main application"
+  },
+  "estimatedTotal": {
+    "message": "Total estimado",
+    "description": "Label for estimated total cost"
+  },
+  "items": {
+    "message": "articulos",
+    "description": "Label for items count"
+  },
+  "selectSupermarket": {
+    "message": "Selecciona supermercado",
+    "description": "Label for supermarket selection"
+  },
+  "addItemsToCart": {
+    "message": "Anadir $COUNT$ articulos al carrito",
+    "description": "Button text to add items to cart",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "processing": {
+    "message": "Procesando...",
+    "description": "Status text when processing items"
+  },
+  "completed": {
+    "message": "Completado",
+    "description": "Status text when process is complete"
+  },
+  "paused": {
+    "message": "En pausa",
+    "description": "Status text when process is paused"
+  },
+  "error": {
+    "message": "Error",
+    "description": "Generic error label"
+  },
+  "pause": {
+    "message": "Pausar",
+    "description": "Button text to pause process"
+  },
+  "resume": {
+    "message": "Reanudar",
+    "description": "Button text to resume process"
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": "Button text to cancel process"
+  },
+  "retry": {
+    "message": "Reintentar",
+    "description": "Button text to retry"
+  },
+  "close": {
+    "message": "Cerrar",
+    "description": "Button text to close"
+  },
+  "defaultSupermarket": {
+    "message": "Supermercado predeterminado",
+    "description": "Setting label for default supermarket"
+  },
+  "autoSync": {
+    "message": "Sincronizacion automatica",
+    "description": "Setting label for auto sync"
+  },
+  "autoSyncDescription": {
+    "message": "Sincronizar lista automaticamente al abrir la extension",
+    "description": "Description for auto sync setting"
+  },
+  "notifications": {
+    "message": "Notificaciones",
+    "description": "Setting label for notifications"
+  },
+  "notificationsDescription": {
+    "message": "Mostrar notificaciones al completar el carrito",
+    "description": "Description for notifications setting"
+  },
+  "backendUrl": {
+    "message": "URL del servidor",
+    "description": "Setting label for backend URL"
+  },
+  "apiKey": {
+    "message": "Clave API",
+    "description": "Setting label for API key"
+  },
+  "saveSettings": {
+    "message": "Guardar configuracion",
+    "description": "Button text to save settings"
+  },
+  "settingsSaved": {
+    "message": "Configuracion guardada",
+    "description": "Success message when settings are saved"
+  },
+  "categoryProduce": {
+    "message": "Frutas y Verduras",
+    "description": "Category name for produce"
+  },
+  "categoryDairy": {
+    "message": "Lacteos",
+    "description": "Category name for dairy"
+  },
+  "categoryMeat": {
+    "message": "Carnes y Aves",
+    "description": "Category name for meat"
+  },
+  "categorySeafood": {
+    "message": "Pescados y Mariscos",
+    "description": "Category name for seafood"
+  },
+  "categoryBakery": {
+    "message": "Panaderia",
+    "description": "Category name for bakery"
+  },
+  "categoryFrozen": {
+    "message": "Congelados",
+    "description": "Category name for frozen"
+  },
+  "categoryCanned": {
+    "message": "Conservas",
+    "description": "Category name for canned goods"
+  },
+  "categoryDryGoods": {
+    "message": "Despensa",
+    "description": "Category name for dry goods"
+  },
+  "categoryCondiments": {
+    "message": "Condimentos y Salsas",
+    "description": "Category name for condiments"
+  },
+  "categorySpices": {
+    "message": "Especias y Hierbas",
+    "description": "Category name for spices"
+  },
+  "categoryBeverages": {
+    "message": "Bebidas",
+    "description": "Category name for beverages"
+  },
+  "categoryOther": {
+    "message": "Otros",
+    "description": "Category name for other items"
+  },
+  "outOfStock": {
+    "message": "Agotado",
+    "description": "Label for out of stock items"
+  },
+  "alternativeFound": {
+    "message": "Alternativa encontrada",
+    "description": "Label when alternative product is found"
+  },
+  "noAlternative": {
+    "message": "Sin alternativa",
+    "description": "Label when no alternative is available"
+  },
+  "itemAdded": {
+    "message": "Articulo anadido",
+    "description": "Status when item is added to cart"
+  },
+  "itemFailed": {
+    "message": "Error al anadir",
+    "description": "Status when item failed to add"
+  },
+  "openSupermarket": {
+    "message": "Abrir $SUPERMARKET$",
+    "description": "Button text to open supermarket website",
+    "placeholders": {
+      "supermarket": {
+        "content": "$1",
+        "example": "Mercadona"
+      }
+    }
+  },
+  "loginRequired": {
+    "message": "Inicia sesion en $SUPERMARKET$ primero",
+    "description": "Message when login is required",
+    "placeholders": {
+      "supermarket": {
+        "content": "$1",
+        "example": "Mercadona"
+      }
+    }
+  },
+  "version": {
+    "message": "Version",
+    "description": "Label for version number"
+  },
+  "privacyPolicy": {
+    "message": "Politica de privacidad",
+    "description": "Link text for privacy policy"
+  },
+  "support": {
+    "message": "Soporte",
+    "description": "Link text for support"
+  }
+}

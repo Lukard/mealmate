@@ -1,0 +1,35 @@
+{
+  "id": "test-user-standard",
+  "email": "test.standard@example.com",
+  "name": "Test User Standard",
+  "profile": {
+    "dietType": "standard",
+    "allergies": [],
+    "intolerances": [],
+    "targetCalories": 2000,
+    "mealsPerDay": 3,
+    "cookingSkill": "intermediate",
+    "budget": "medium",
+    "servingsDefault": 2,
+    "preferredSupermarkets": ["Mercadona", "Carrefour"],
+    "brandPreferences": {
+      "preferred": ["Hacendado"],
+      "avoided": []
+    },
+    "location": {
+      "postalCode": "28001",
+      "city": "Madrid",
+      "region": "Madrid"
+    }
+  },
+  "preferences": {
+    "notifications": true,
+    "weekStartDay": "monday",
+    "unitSystem": "metric",
+    "language": "es"
+  },
+  "metadata": {
+    "createdAt": "2026-01-01T10:00:00.000Z",
+    "lastLogin": "2026-01-15T08:00:00.000Z"
+  }
+}

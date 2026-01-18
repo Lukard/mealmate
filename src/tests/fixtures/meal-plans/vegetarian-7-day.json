@@ -1,0 +1,152 @@
+{
+  "id": "test-meal-plan-vegetarian",
+  "name": "Vegetarian 7-Day Plan",
+  "description": "Test fixture for vegetarian meal plan testing",
+  "userProfile": {
+    "dietType": "vegetarian",
+    "allergies": [],
+    "intolerances": [],
+    "targetCalories": 1800,
+    "mealsPerDay": 3,
+    "cookingSkill": "intermediate",
+    "budget": "medium"
+  },
+  "days": [
+    {
+      "day": 1,
+      "dayName": "Monday",
+      "meals": {
+        "breakfast": {
+          "recipeId": "recipe-v001",
+          "name": "Porridge de Avena con Frutas",
+          "servings": 1,
+          "prepTime": 10,
+          "calories": 380,
+          "macros": { "protein": 12, "carbs": 60, "fat": 10 },
+          "ingredients": [
+            { "name": "Copos de Avena", "quantity": 80, "unit": "g" },
+            { "name": "Leche de Avena", "quantity": 250, "unit": "ml" },
+            { "name": "Platano", "quantity": 100, "unit": "g" },
+            { "name": "Arandanos", "quantity": 50, "unit": "g" },
+            { "name": "Miel", "quantity": 15, "unit": "ml" },
+            { "name": "Canela", "quantity": 2, "unit": "g" }
+          ]
+        },
+        "lunch": {
+          "recipeId": "recipe-v002",
+          "name": "Risotto de Setas",
+          "servings": 4,
+          "prepTime": 40,
+          "calories": 520,
+          "macros": { "protein": 14, "carbs": 72, "fat": 18 },
+          "ingredients": [
+            { "name": "Arroz Arborio", "quantity": 320, "unit": "g" },
+            { "name": "Setas Variadas", "quantity": 300, "unit": "g" },
+            { "name": "Cebolla", "quantity": 100, "unit": "g" },
+            { "name": "Vino Blanco", "quantity": 100, "unit": "ml" },
+            { "name": "Caldo de Verduras", "quantity": 1000, "unit": "ml" },
+            { "name": "Queso Parmesano", "quantity": 60, "unit": "g" },
+            { "name": "Mantequilla", "quantity": 40, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 30, "unit": "ml" }
+          ]
+        },
+        "dinner": {
+          "recipeId": "recipe-v003",
+          "name": "Ensalada de Quinoa",
+          "servings": 2,
+          "prepTime": 25,
+          "calories": 420,
+          "macros": { "protein": 15, "carbs": 48, "fat": 18 },
+          "ingredients": [
+            { "name": "Quinoa", "quantity": 160, "unit": "g" },
+            { "name": "Pepino", "quantity": 150, "unit": "g" },
+            { "name": "Tomate Cherry", "quantity": 150, "unit": "g" },
+            { "name": "Aguacate", "quantity": 100, "unit": "g" },
+            { "name": "Queso Feta", "quantity": 80, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 30, "unit": "ml" },
+            { "name": "Limon", "quantity": 30, "unit": "ml" }
+          ]
+        }
+      },
+      "totalNutrition": {
+        "calories": 1320,
+        "protein": 41,
+        "carbs": 180,
+        "fat": 46
+      }
+    },
+    {
+      "day": 2,
+      "dayName": "Tuesday",
+      "meals": {
+        "breakfast": {
+          "recipeId": "recipe-v004",
+          "name": "Tostada de Aguacate",
+          "servings": 1,
+          "prepTime": 10,
+          "calories": 350,
+          "macros": { "protein": 10, "carbs": 35, "fat": 20 },
+          "ingredients": [
+            { "name": "Pan Integral", "quantity": 80, "unit": "g" },
+            { "name": "Aguacate", "quantity": 120, "unit": "g" },
+            { "name": "Huevo", "quantity": 1, "unit": "units" },
+            { "name": "Tomate Cherry", "quantity": 50, "unit": "g" },
+            { "name": "Semillas de Sesamo", "quantity": 5, "unit": "g" }
+          ]
+        },
+        "lunch": {
+          "recipeId": "recipe-v005",
+          "name": "Curry de Garbanzos",
+          "servings": 4,
+          "prepTime": 35,
+          "calories": 480,
+          "macros": { "protein": 18, "carbs": 55, "fat": 20 },
+          "ingredients": [
+            { "name": "Garbanzos Cocidos", "quantity": 400, "unit": "g" },
+            { "name": "Leche de Coco", "quantity": 400, "unit": "ml" },
+            { "name": "Tomate Triturado", "quantity": 200, "unit": "g" },
+            { "name": "Espinacas", "quantity": 150, "unit": "g" },
+            { "name": "Cebolla", "quantity": 100, "unit": "g" },
+            { "name": "Ajo", "quantity": 3, "unit": "cloves" },
+            { "name": "Jengibre", "quantity": 10, "unit": "g" },
+            { "name": "Curry en Polvo", "quantity": 15, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 30, "unit": "ml" }
+          ]
+        },
+        "dinner": {
+          "recipeId": "recipe-v006",
+          "name": "Pimientos Rellenos de Arroz",
+          "servings": 4,
+          "prepTime": 45,
+          "calories": 380,
+          "macros": { "protein": 12, "carbs": 52, "fat": 14 },
+          "ingredients": [
+            { "name": "Pimiento Rojo", "quantity": 400, "unit": "g" },
+            { "name": "Arroz", "quantity": 200, "unit": "g" },
+            { "name": "Tomate Triturado", "quantity": 150, "unit": "g" },
+            { "name": "Cebolla", "quantity": 100, "unit": "g" },
+            { "name": "Queso Rallado", "quantity": 80, "unit": "g" },
+            { "name": "Aceite de Oliva", "quantity": 30, "unit": "ml" }
+          ]
+        }
+      },
+      "totalNutrition": {
+        "calories": 1210,
+        "protein": 40,
+        "carbs": 142,
+        "fat": 54
+      }
+    }
+  ],
+  "weeklyNutrition": {
+    "averageCalories": 1265,
+    "averageProtein": 40,
+    "averageCarbs": 161,
+    "averageFat": 50
+  },
+  "metadata": {
+    "createdAt": "2026-01-15T10:00:00.000Z",
+    "updatedAt": "2026-01-15T10:00:00.000Z",
+    "version": 1
+  }
+}

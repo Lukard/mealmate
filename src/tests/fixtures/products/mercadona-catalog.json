@@ -1,0 +1,385 @@
+{
+  "supermarket": "Mercadona",
+  "scrapedAt": "2026-01-15T10:00:00.000Z",
+  "products": [
+    {
+      "id": "merc-001",
+      "name": "Leche Entera Hacendado",
+      "brand": "Hacendado",
+      "category": "Lacteos",
+      "subcategory": "Leche",
+      "price": 0.85,
+      "currency": "EUR",
+      "quantity": 1,
+      "unit": "L",
+      "unitPrice": 0.85,
+      "unitPriceUnit": "L",
+      "available": true,
+      "imageUrl": "https://example.com/leche.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 65,
+          "protein": 3.2,
+          "carbs": 4.8,
+          "fat": 3.6,
+          "fiber": 0,
+          "sodium": 0.04
+        }
+      },
+      "allergens": ["lactose"]
+    },
+    {
+      "id": "merc-002",
+      "name": "Pan de Molde Integral Hacendado",
+      "brand": "Hacendado",
+      "category": "Panaderia",
+      "subcategory": "Pan de Molde",
+      "price": 1.20,
+      "currency": "EUR",
+      "quantity": 820,
+      "unit": "g",
+      "unitPrice": 1.46,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/pan.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 250,
+          "protein": 10,
+          "carbs": 45,
+          "fat": 3,
+          "fiber": 6,
+          "sodium": 0.5
+        }
+      },
+      "allergens": ["gluten"]
+    },
+    {
+      "id": "merc-003",
+      "name": "Huevos Camperos M Hacendado",
+      "brand": "Hacendado",
+      "category": "Huevos",
+      "subcategory": "Huevos Frescos",
+      "price": 2.15,
+      "currency": "EUR",
+      "quantity": 12,
+      "unit": "units",
+      "unitPrice": 0.18,
+      "unitPriceUnit": "unit",
+      "available": true,
+      "imageUrl": "https://example.com/huevos.jpg",
+      "nutrition": {
+        "perUnit": {
+          "calories": 70,
+          "protein": 6,
+          "carbs": 0.5,
+          "fat": 5
+        }
+      },
+      "allergens": ["eggs"]
+    },
+    {
+      "id": "merc-004",
+      "name": "Aceite de Oliva Virgen Extra Hacendado",
+      "brand": "Hacendado",
+      "category": "Aceites",
+      "subcategory": "Aceite de Oliva",
+      "price": 7.50,
+      "currency": "EUR",
+      "quantity": 1,
+      "unit": "L",
+      "unitPrice": 7.50,
+      "unitPriceUnit": "L",
+      "available": true,
+      "imageUrl": "https://example.com/aceite.jpg",
+      "nutrition": {
+        "per100ml": {
+          "calories": 884,
+          "protein": 0,
+          "carbs": 0,
+          "fat": 100
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-005",
+      "name": "Pechuga de Pollo Fileteada",
+      "brand": "Hacendado",
+      "category": "Carnes",
+      "subcategory": "Pollo",
+      "price": 6.99,
+      "currency": "EUR",
+      "quantity": 1,
+      "unit": "kg",
+      "unitPrice": 6.99,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/pollo.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 110,
+          "protein": 23,
+          "carbs": 0,
+          "fat": 2
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-006",
+      "name": "Arroz Redondo Hacendado",
+      "brand": "Hacendado",
+      "category": "Arroz y Legumbres",
+      "subcategory": "Arroz",
+      "price": 1.10,
+      "currency": "EUR",
+      "quantity": 1,
+      "unit": "kg",
+      "unitPrice": 1.10,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/arroz.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 350,
+          "protein": 7,
+          "carbs": 78,
+          "fat": 0.5,
+          "fiber": 1
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-007",
+      "name": "Tomate Frito Hacendado",
+      "brand": "Hacendado",
+      "category": "Conservas",
+      "subcategory": "Tomate",
+      "price": 1.05,
+      "currency": "EUR",
+      "quantity": 400,
+      "unit": "g",
+      "unitPrice": 2.63,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "promotion": {
+        "type": "2x1",
+        "originalPrice": 1.05,
+        "effectivePrice": 0.53
+      },
+      "imageUrl": "https://example.com/tomate.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 80,
+          "protein": 1.2,
+          "carbs": 8,
+          "fat": 4.5
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-008",
+      "name": "Lentejas Cocidas Hacendado",
+      "brand": "Hacendado",
+      "category": "Arroz y Legumbres",
+      "subcategory": "Legumbres",
+      "price": 0.95,
+      "currency": "EUR",
+      "quantity": 400,
+      "unit": "g",
+      "unitPrice": 2.38,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/lentejas.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 116,
+          "protein": 9,
+          "carbs": 20,
+          "fat": 0.4,
+          "fiber": 8
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-009",
+      "name": "Yogur Natural Hacendado",
+      "brand": "Hacendado",
+      "category": "Lacteos",
+      "subcategory": "Yogures",
+      "price": 1.30,
+      "currency": "EUR",
+      "quantity": 500,
+      "unit": "g",
+      "unitPrice": 2.60,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/yogur.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 65,
+          "protein": 4,
+          "carbs": 5,
+          "fat": 3.5
+        }
+      },
+      "allergens": ["lactose"]
+    },
+    {
+      "id": "merc-010",
+      "name": "Atun Claro en Aceite de Oliva",
+      "brand": "Hacendado",
+      "category": "Conservas",
+      "subcategory": "Pescado",
+      "price": 3.25,
+      "currency": "EUR",
+      "quantity": 240,
+      "unit": "g",
+      "unitPrice": 13.54,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/atun.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 198,
+          "protein": 26,
+          "carbs": 0,
+          "fat": 10
+        }
+      },
+      "allergens": ["fish"]
+    },
+    {
+      "id": "merc-011",
+      "name": "Patata Blanca Granel",
+      "brand": "Mercadona",
+      "category": "Frutas y Verduras",
+      "subcategory": "Verduras",
+      "price": 1.20,
+      "currency": "EUR",
+      "quantity": 1,
+      "unit": "kg",
+      "unitPrice": 1.20,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/patata.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 77,
+          "protein": 2,
+          "carbs": 17,
+          "fat": 0.1
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-012",
+      "name": "Cebolla Granel",
+      "brand": "Mercadona",
+      "category": "Frutas y Verduras",
+      "subcategory": "Verduras",
+      "price": 0.99,
+      "currency": "EUR",
+      "quantity": 1,
+      "unit": "kg",
+      "unitPrice": 0.99,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/cebolla.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 40,
+          "protein": 1.1,
+          "carbs": 9,
+          "fat": 0.1
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-013",
+      "name": "Chorizo Extra Hacendado",
+      "brand": "Hacendado",
+      "category": "Embutidos",
+      "subcategory": "Chorizo",
+      "price": 2.85,
+      "currency": "EUR",
+      "quantity": 250,
+      "unit": "g",
+      "unitPrice": 11.40,
+      "unitPriceUnit": "kg",
+      "available": false,
+      "unavailableReason": "out_of_stock",
+      "alternatives": ["merc-014"],
+      "imageUrl": "https://example.com/chorizo.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 380,
+          "protein": 22,
+          "carbs": 2,
+          "fat": 32
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-014",
+      "name": "Chorizo Casero",
+      "brand": "Hacendado",
+      "category": "Embutidos",
+      "subcategory": "Chorizo",
+      "price": 3.45,
+      "currency": "EUR",
+      "quantity": 280,
+      "unit": "g",
+      "unitPrice": 12.32,
+      "unitPriceUnit": "kg",
+      "available": true,
+      "imageUrl": "https://example.com/chorizo2.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 395,
+          "protein": 21,
+          "carbs": 1.5,
+          "fat": 34
+        }
+      },
+      "allergens": []
+    },
+    {
+      "id": "merc-015",
+      "name": "Lechuga Romana",
+      "brand": "Mercadona",
+      "category": "Frutas y Verduras",
+      "subcategory": "Verduras",
+      "price": 0.79,
+      "currency": "EUR",
+      "quantity": 1,
+      "unit": "units",
+      "unitPrice": 0.79,
+      "unitPriceUnit": "unit",
+      "available": true,
+      "imageUrl": "https://example.com/lechuga.jpg",
+      "nutrition": {
+        "per100g": {
+          "calories": 17,
+          "protein": 1.2,
+          "carbs": 3.3,
+          "fat": 0.3,
+          "fiber": 2.1
+        }
+      },
+      "allergens": []
+    }
+  ],
+  "metadata": {
+    "totalProducts": 15,
+    "categories": ["Lacteos", "Panaderia", "Huevos", "Aceites", "Carnes", "Arroz y Legumbres", "Conservas", "Frutas y Verduras", "Embutidos"],
+    "unavailableCount": 1
+  }
+}

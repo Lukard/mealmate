@@ -1,0 +1,61 @@
+{
+  "name": "mealmate",
+  "version": "0.1.0",
+  "description": "MealMate - Automated meal planning with Spanish supermarket integration",
+  "private": true,
+  "workspaces": [
+    "src/shared",
+    "src/core",
+    "src/scraper",
+    "src/api",
+    "src/ui",
+    "src/extension"
+  ],
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "dev": "bash scripts/dev.sh",
+    "build": "bash scripts/build.sh",
+    "build:all": "npm run build --workspaces",
+    "clean": "rm -rf src/*/dist src/*/build src/*/.next",
+    "test": "vitest run",
+    "test:unit": "vitest run --coverage",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage --reporter=verbose",
+    "test:integration": "vitest run src/tests/integration/**/*.test.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:chrome": "playwright test --project=chromium",
+    "test:e2e:firefox": "playwright test --project=firefox",
+    "test:e2e:mobile": "playwright test --project=mobile-chrome --project=mobile-safari",
+    "test:e2e:extension": "playwright test --project=chrome-extension",
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "format": "prettier --write 'src/**/*.{ts,tsx,json}'",
+    "typecheck": "tsc --noEmit",
+    "dev:api": "npm run dev --workspace=@meal-automation/api",
+    "dev:ui": "npm run dev --workspace=@meal-automation/ui",
+    "dev:extension": "npm run dev --workspace=@meal-automation/extension"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vitest/coverage-v8": "^2.1.0",
+    "@vitest/ui": "^2.1.0",
+    "eslint": "^8.55.0",
+    "msw": "^2.6.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

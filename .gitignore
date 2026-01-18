@@ -1,0 +1,122 @@
+# Dependencies
+node_modules/
+.npm/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+.plasmo/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# IDE and editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional npm cache
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Playwright
+playwright-report/
+playwright/.cache/
+test-results/
+
+# Vitest
+.vitest/
+
+# Turborepo
+.turbo/
+
+# Vercel
+.vercel/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Scraper cache
+.scraper-cache/
+scraped-data/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Debug
+.debug/
+
+# Local development
+local/
+.local/
+
+# Secrets (extra protection)
+*.pem
+*.key
+*.crt
+secrets/
+credentials.json
+service-account.json
+
+# Package lock variations (if using npm)
+# Uncomment if using yarn/pnpm instead
+# package-lock.json
+
+# Extension unpacked builds
+src/extension/build/
+src/extension/.plasmo/
+
+# Claude Flow data
+.claude-flow/data/
+.claude-flow/sessions/
+.claude-flow/memory/

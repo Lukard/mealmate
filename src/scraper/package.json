@@ -1,0 +1,37 @@
+{
+  "name": "@meal-automation/scraper",
+  "version": "0.1.0",
+  "description": "Supermarket scrapers for meal automation",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./scrapers/*": {
+      "types": "./dist/scrapers/*.d.ts",
+      "import": "./dist/scrapers/*.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@meal-automation/shared": "*",
+    "cheerio": "^1.0.0-rc.12",
+    "undici": "^6.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0",
+    "@types/cheerio": "^0.22.35"
+  }
+}
