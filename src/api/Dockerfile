@@ -43,14 +43,19 @@ COPY --from=builder /app/src/core/package*.json ./src/core/
 COPY --from=builder /app/src/scraper/package*.json ./src/scraper/
 COPY --from=builder /app/src/api/package*.json ./src/api/
 
-# Install production dependencies only
-RUN npm ci --only=production
+# Install ALL dependencies (including dev for drizzle-kit and tsx)
+RUN npm ci
 
 # Copy built files
 COPY --from=builder /app/src/api/dist ./src/api/dist
 COPY --from=builder /app/src/shared/dist ./src/shared/dist
 COPY --from=builder /app/src/core/dist ./src/core/dist
 COPY --from=builder /app/src/scraper/dist ./src/scraper/dist
+
+# Copy scripts and config for database operations
+COPY --from=builder /app/src/api/scripts ./src/api/scripts
+COPY --from=builder /app/src/api/src/db ./src/api/src/db
+COPY --from=builder /app/src/api/drizzle.config.ts ./src/api/drizzle.config.ts
 
 # Set ownership
 RUN chown -R nodejs:nodejs /app
@@ -65,6 +70,6 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1
 
-# Start the application
+# Start the application (migrations run via railway.json startCommand)
 WORKDIR /app/src/api
 CMD ["npm", "run", "start"]
