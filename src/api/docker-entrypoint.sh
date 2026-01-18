@@ -7,7 +7,11 @@ echo "DATABASE_URL set: $(if [ -n "$DATABASE_URL" ]; then echo 'yes'; else echo 
 
 # Push schema to database (creates/updates tables)
 echo "Step 1: Pushing database schema with drizzle-kit..."
-npx drizzle-kit push --verbose 2>&1 || echo "Warning: db:push may have failed"
+echo "Config file exists: $(if [ -f drizzle.config.ts ]; then echo 'yes'; else echo 'no'; fi)"
+echo "Schema file exists: $(if [ -f src/db/schema.ts ]; then echo 'yes'; else echo 'no'; fi)"
+echo "Listing directory:"
+ls -la
+npx drizzle-kit push --config=drizzle.config.ts --verbose 2>&1 || echo "Warning: db:push may have failed"
 
 # Wait a moment for tables to be ready
 sleep 2
