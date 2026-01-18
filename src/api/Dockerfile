@@ -20,9 +20,12 @@ COPY src/scraper ./src/scraper
 COPY src/api ./src/api
 COPY tsconfig.json ./
 
-# Build the application
-WORKDIR /app/src/api
-RUN npm run build
+# Build all required packages in order (shared -> core -> scraper -> api)
+WORKDIR /app
+RUN npm run build --workspace=@meal-automation/shared && \
+    npm run build --workspace=@meal-automation/core && \
+    npm run build --workspace=@meal-automation/scraper && \
+    npm run build --workspace=@meal-automation/api
 
 # Production stage
 FROM node:20-alpine AS production
