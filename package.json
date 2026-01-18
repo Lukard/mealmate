@@ -40,6 +40,14 @@
     "dev:ui": "npm run dev --workspace=@meal-automation/ui",
     "dev:extension": "npm run dev --workspace=@meal-automation/extension"
   },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "overrides": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
     "@testing-library/jest-dom": "^6.6.0",

@@ -120,3 +120,4 @@ src/extension/.plasmo/
 .claude-flow/data/
 .claude-flow/sessions/
 .claude-flow/memory/
+src/api/.env.production

@@ -104,14 +104,17 @@ function createErrorResponse(
   requestId: string,
   details?: unknown
 ): ErrorResponse {
+  const errorObj: ErrorResponse['error'] = {
+    code,
+    message,
+    requestId,
+  };
+  if (details !== undefined) {
+    errorObj.details = details;
+  }
   return {
     success: false,
-    error: {
-      code,
-      message,
-      ...(details && { details }),
-      requestId,
-    },
+    error: errorObj,
   };
 }
 

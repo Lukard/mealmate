@@ -53,7 +53,7 @@ export function generateAccessToken(user: { id: string; email: string }): string
       email: user.email,
     },
     JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
+    { expiresIn: JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'] }
   );
 }
 
