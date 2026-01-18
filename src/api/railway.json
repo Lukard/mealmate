@@ -6,9 +6,8 @@
   },
   "deploy": {
     "numReplicas": 1,
-    "startCommand": "npm run db:push && npm run db:seed && npm run start",
     "healthcheckPath": "/api/v1/health",
-    "healthcheckTimeout": 60,
+    "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3
   }

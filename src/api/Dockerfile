@@ -57,6 +57,10 @@ COPY --from=builder /app/src/api/scripts ./src/api/scripts
 COPY --from=builder /app/src/api/src/db ./src/api/src/db
 COPY --from=builder /app/src/api/drizzle.config.ts ./src/api/drizzle.config.ts
 
+# Copy entrypoint script
+COPY src/api/docker-entrypoint.sh ./src/api/docker-entrypoint.sh
+RUN chmod +x ./src/api/docker-entrypoint.sh
+
 # Set ownership
 RUN chown -R nodejs:nodejs /app
 
@@ -66,10 +70,10 @@ USER nodejs
 # Expose port
 EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+# Health check with longer start period for database setup
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/v1/health || exit 1
 
-# Start the application (migrations run via railway.json startCommand)
+# Start via entrypoint script (runs db setup then starts server)
 WORKDIR /app/src/api
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
