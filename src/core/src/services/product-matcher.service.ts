@@ -12,9 +12,11 @@ import type {
   Product,
   MatchType,
   ProductMatchAlternative,
-  IngredientCategory
+  IngredientCategory,
+  ProductMatchId
 } from '@meal-automation/shared';
 import type { SupermarketId } from '@meal-automation/shared';
+import { createProductMatchId } from '@meal-automation/shared';
 
 import {
   getSpanishTranslations,
@@ -875,8 +877,8 @@ export class ProductMatcherService implements IProductMatcher {
   /**
    * Generate a unique match ID
    */
-  private generateMatchId(): string {
-    return `match-${Date.now()}-${Math.random().toString(36).substring(2, 9)}` as any;
+  private generateMatchId(): ProductMatchId {
+    return createProductMatchId(`match-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   }
 }
 

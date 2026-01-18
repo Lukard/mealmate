@@ -14,9 +14,9 @@ import type {
   Meal,
   MealTime,
   DayOfWeek,
-  createMealPlanId,
-  createMealId
+  MealId
 } from '@meal-automation/shared';
+import { createMealPlanId, createMealId } from '@meal-automation/shared';
 
 import { RecipeService } from './recipe.service.js';
 import { GroceryListService } from './grocery-list.service.js';
@@ -258,8 +258,8 @@ export class MealPlannerService implements IMealPlanner {
   /**
    * Generate a unique meal ID
    */
-  private generateMealId(): string {
-    return `meal-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  private generateMealId(): MealId {
+    return createMealId(`meal-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   }
 
   /**
