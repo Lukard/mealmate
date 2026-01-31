@@ -46,7 +46,8 @@
   },
   "overrides": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vitest": "^2.1.9"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
