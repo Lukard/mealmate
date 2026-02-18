@@ -3,7 +3,7 @@
  * Client for AI-powered features (meal plan generation, etc.)
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // ============================================
 // Types
