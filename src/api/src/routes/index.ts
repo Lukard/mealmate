@@ -11,6 +11,7 @@ import mealPlans from './meal-plans.routes.js';
 import products from './products.routes.js';
 import grocery from './grocery.routes.js';
 import health from './health.routes.js';
+import ai from './ai.routes.js';
 
 /**
  * Create and configure all API routes
@@ -26,9 +27,10 @@ export function createRoutes(): Hono {
   api.route('/products', products);
   api.route('/grocery-lists', grocery);
   api.route('/health', health);
+  api.route('/ai', ai);
 
   return api;
 }
 
 // Export individual route modules for direct access if needed
-export { auth, users, recipes, mealPlans, products, grocery, health };
+export { auth, users, recipes, mealPlans, products, grocery, health, ai };

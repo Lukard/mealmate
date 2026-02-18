@@ -174,6 +174,7 @@ function getOpenAPISpec(): object {
       { name: 'Meal Plans', description: 'Meal planning' },
       { name: 'Products', description: 'Product search and comparison' },
       { name: 'Grocery Lists', description: 'Grocery list management' },
+      { name: 'AI', description: 'AI-powered features (meal plan generation, recommendations)' },
       { name: 'Health', description: 'Health check endpoints' },
     ],
     paths: {
@@ -374,6 +375,117 @@ function getOpenAPISpec(): object {
           ],
           responses: {
             '200': { description: 'Optimization result' },
+          },
+        },
+      },
+      '/ai/meal-plans/generate': {
+        post: {
+          tags: ['AI'],
+          summary: 'Generate meal plan with AI',
+          description: 'Uses AI to generate a personalized meal plan based on user preferences, dietary restrictions, and available recipes.',
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['startDate', 'endDate'],
+                  properties: {
+                    startDate: { type: 'string', format: 'date', example: '2024-01-15' },
+                    endDate: { type: 'string', format: 'date', example: '2024-01-21' },
+                    preferences: {
+                      type: 'object',
+                      properties: {
+                        includeBreakfast: { type: 'boolean', default: true },
+                        includeLunch: { type: 'boolean', default: true },
+                        includeDinner: { type: 'boolean', default: true },
+                        includeSnacks: { type: 'boolean', default: false },
+                        variety: { type: 'string', enum: ['low', 'medium', 'high'], default: 'medium' },
+                        preferQuickMeals: { type: 'boolean', default: false },
+                        maxPrepTime: { type: 'integer', minimum: 5, maximum: 180 },
+                        budgetLimit: { type: 'number', minimum: 0 },
+                        mealPrepFriendly: { type: 'boolean', default: false },
+                      },
+                    },
+                    context: {
+                      type: 'object',
+                      properties: {
+                        occasion: { type: 'string', maxLength: 100 },
+                        cuisineFocus: { type: 'array', items: { type: 'string' }, maxItems: 5 },
+                        excludeRecipes: { type: 'array', items: { type: 'string', format: 'uuid' }, maxItems: 50 },
+                        includeRecipes: { type: 'array', items: { type: 'string', format: 'uuid' }, maxItems: 20 },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            '201': { 
+              description: 'Meal plan generated successfully',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      success: { type: 'boolean' },
+                      data: {
+                        type: 'object',
+                        properties: {
+                          mealPlan: { type: 'object' },
+                          aiExplanation: { type: 'string' },
+                        },
+                      },
+                      metadata: {
+                        type: 'object',
+                        properties: {
+                          provider: { type: 'string' },
+                          model: { type: 'string' },
+                          tokensUsed: { type: 'integer' },
+                          latencyMs: { type: 'integer' },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            '400': { description: 'Validation error or insufficient data' },
+            '401': { description: 'Unauthorized' },
+            '500': { description: 'AI generation failed' },
+          },
+        },
+      },
+      '/ai/status': {
+        get: {
+          tags: ['AI'],
+          summary: 'Check AI service status',
+          security: [{ bearerAuth: [] }],
+          responses: {
+            '200': {
+              description: 'AI service status',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      success: { type: 'boolean' },
+                      data: {
+                        type: 'object',
+                        properties: {
+                          available: { type: 'boolean' },
+                          provider: { type: 'string' },
+                          model: { type: 'string' },
+                          features: { type: 'object' },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },

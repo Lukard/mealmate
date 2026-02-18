@@ -5,6 +5,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema.js';
+import * as schemaAI from './schema-ai.js';
 
 // Get database URL from environment
 const DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:5432/meal_automation';
@@ -16,11 +17,14 @@ const queryClient = postgres(DATABASE_URL, {
   connect_timeout: 10, // Connection timeout in seconds
 });
 
-// Create drizzle instance with schema
-export const db = drizzle(queryClient, { schema });
+// Merge schemas
+const fullSchema = { ...schema, ...schemaAI };
 
-// Export schema for use in queries
-export { schema };
+// Create drizzle instance with combined schema
+export const db = drizzle(queryClient, { schema: fullSchema });
+
+// Export schemas for use in queries
+export { schema, schemaAI };
 
 // Export type for use in other modules
 export type Database = typeof db;
