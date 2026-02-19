@@ -212,17 +212,50 @@ export default function MealPlanPage() {
 
   const handleAcceptPlan = () => {
     if (generatedPlan) {
-      // Transform the generated plan to match the store format
-      // This is a simplified transformation - you may need to adjust based on your actual store structure
-      // For now, we'll close the modal and potentially refresh the page or update state
+      // Transform AI plan to store format
+      const dayNames: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      
+      // Create empty days structure
+      const days: Record<DayOfWeek, { breakfast?: MealItem; lunch?: MealItem; dinner?: MealItem; snack?: MealItem }> = {
+        monday: {}, tuesday: {}, wednesday: {}, thursday: {}, friday: {}, saturday: {}, sunday: {}
+      };
+      
+      // Map entries to days
+      generatedPlan.entries.forEach((entry) => {
+        const entryDate = new Date(entry.date);
+        const dayIndex = (entryDate.getDay() + 6) % 7; // Convert Sunday=0 to Monday=0
+        const dayName = dayNames[dayIndex];
+        
+        const mealItem: MealItem = {
+          id: entry.id || crypto.randomUUID(),
+          name: (entry as unknown as { recipeName?: string }).recipeName || 'Receta',
+          description: (entry as unknown as { description?: string }).description || '',
+          prepTimeMinutes: (entry as unknown as { prepTime?: number }).prepTime || 30,
+          servings: entry.servings || 4,
+          ingredients: [],
+          instructions: [],
+        };
+        
+        const mealType = entry.mealType as 'breakfast' | 'lunch' | 'dinner' | 'snack';
+        if (days[dayName] && ['breakfast', 'lunch', 'dinner', 'snack'].includes(mealType)) {
+          days[dayName][mealType] = mealItem;
+        }
+      });
+      
+      // Create the weekly plan
+      const weeklyPlan = {
+        id: generatedPlan.id,
+        weekStartDate: generatedPlan.startDate,
+        days,
+        estimatedCost: 80, // Default estimate
+      };
+      
+      // Save to store
+      setMealPlan(weeklyPlan);
+      
+      // Close modal
       setShowAIModal(false);
       setGeneratedPlan(null);
-      
-      // TODO: Transform AI plan format to store format and update
-      // setMealPlan(transformedPlan);
-      
-      // Reload to see the new plan (temporary until proper state integration)
-      window.location.reload();
     }
   };
 
