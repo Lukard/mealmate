@@ -18,11 +18,13 @@ const SYSTEM_PROMPT = `Eres un nutricionista y chef experto especializado en pla
 
 Tu tarea es crear un plan de comidas semanal personalizado. Debes responder SOLO con JSON válido.
 
-Reglas:
-1. Incluye recetas variadas y equilibradas
-2. Alterna entre carne, pescado, legumbres y huevos
-3. Prioriza ingredientes de temporada
-4. Las recetas deben ser realizables en el tiempo indicado
+Reglas IMPORTANTES:
+1. Genera recetas DIFERENTES cada día - NO repitas platos en la semana
+2. SOLO incluye las comidas que el usuario solicite (no añadas extras)
+3. Alterna entre carne, pescado, legumbres, huevos y verduras
+4. Usa ingredientes de temporada y recetas españolas variadas
+5. Respeta el tiempo de preparación máximo indicado
+6. Cada plato debe tener un nombre único y específico
 
 Formato de respuesta (JSON estricto):
 {
@@ -32,15 +34,19 @@ Formato de respuesta (JSON estricto):
       {
         "date": "YYYY-MM-DD",
         "meals": {
-          "lunch": { "name": "Nombre del plato", "prepTime": 30, "description": "Breve descripción" },
-          "dinner": { "name": "Nombre del plato", "prepTime": 25, "description": "Breve descripción" }
+          "breakfast": { "name": "Nombre único del plato", "prepTime": 15, "description": "Descripción" },
+          "lunch": { "name": "Nombre único del plato", "prepTime": 30, "description": "Descripción" },
+          "dinner": { "name": "Nombre único del plato", "prepTime": 25, "description": "Descripción" },
+          "snack": { "name": "Nombre único del plato", "prepTime": 10, "description": "Descripción" }
         }
       }
     ]
   },
   "shoppingTips": ["consejo1", "consejo2"],
   "estimatedWeeklyCost": 80
-}`;
+}
+
+IMPORTANTE: Solo incluye en "meals" las comidas solicitadas por el usuario. Si solo pide almuerzo y cena, NO incluyas breakfast ni snack.`;
 
 export async function POST(request: NextRequest) {
   if (!GROQ_API_KEY) {
@@ -59,14 +65,31 @@ export async function POST(request: NextRequest) {
     const end = new Date(endDate);
     const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 
+    // Build list of meals to include
+    const mealsToInclude: string[] = [];
+    if (preferences?.includeBreakfast) mealsToInclude.push('desayuno (breakfast)');
+    if (preferences?.includeLunch !== false) mealsToInclude.push('almuerzo (lunch)');
+    if (preferences?.includeDinner !== false) mealsToInclude.push('cena (dinner)');
+    if (preferences?.includeSnacks) mealsToInclude.push('merienda (snack)');
+    
+    const mealsText = mealsToInclude.length > 0 ? mealsToInclude.join(', ') : 'almuerzo y cena';
+
     const userPrompt = `Genera un plan de comidas para ${days} días, del ${startDate} al ${endDate}.
 
-Preferencias:
-- Comidas a incluir: ${preferences?.includeLunch !== false ? 'almuerzo' : ''} ${preferences?.includeDinner !== false ? 'cena' : ''}
-- Nivel de variedad: ${preferences?.variety || 'medium'}
-- Tiempo máximo de preparación: ${preferences?.maxPrepTime || 45} minutos
+Preferencias del usuario:
+- Comidas a incluir: ${mealsText}
+- IMPORTANTE: SOLO genera las comidas especificadas arriba, NO añadas otras
+- Nivel de variedad: ${preferences?.variety || 'high'} (usa recetas diferentes cada día)
+- Tiempo máximo de preparación por plato: ${preferences?.maxPrepTime || 45} minutos
+${preferences?.budgetLimit ? `- Presupuesto semanal aproximado: ${preferences.budgetLimit}€` : ''}
 
-Por favor genera el plan en formato JSON.`;
+Requisitos:
+1. Genera recetas DIFERENTES para cada día (no repitas platos)
+2. Solo incluye las comidas especificadas (${mealsText})
+3. Varía los ingredientes principales entre días
+4. Usa nombres de platos en español
+
+Por favor genera el plan en formato JSON siguiendo exactamente el schema indicado.`;
 
     // Call Groq API
     const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {

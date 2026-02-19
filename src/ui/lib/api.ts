@@ -5,23 +5,51 @@ import type {
   MealItem,
   DayPlan
 } from './store';
+import { aiApi, getWeekDateRange } from './api/ai';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // API client for backend communication
 export const api = {
-  // Generate meal plan from questionnaire answers
+  // Generate meal plan from questionnaire answers using AI
   async generateMealPlan(answers: QuestionnaireAnswers): Promise<WeeklyMealPlan> {
-    // TODO: Replace with actual API call when backend is ready
-    // const response = await fetch(`${API_BASE_URL}/api/meal-plans/generate`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(answers),
-    // });
-    // return response.json();
+    try {
+      // Get next week's date range
+      const { startDate, endDate } = getWeekDateRange(0);
+      
+      // Call AI API with user preferences
+      const response = await aiApi.generateMealPlan({
+        startDate,
+        endDate,
+        preferences: {
+          includeBreakfast: answers.schedule.meals.includes('breakfast'),
+          includeLunch: answers.schedule.meals.includes('lunch'),
+          includeDinner: answers.schedule.meals.includes('dinner'),
+          includeSnacks: answers.schedule.meals.includes('snack'),
+          variety: 'high',
+          maxPrepTime: answers.schedule.cookingTime === 'minimal' ? 20 : 
+                       answers.schedule.cookingTime === 'moderate' ? 45 : 90,
+          budgetLimit: answers.budget.weeklyBudget,
+        },
+        context: {
+          cuisineFocus: answers.preferences.cuisineTypes,
+        },
+      });
 
-    // Mock response for development
-    return generateMockMealPlan(answers);
+      if (!response.success || !response.data?.mealPlan) {
+        throw new Error('Failed to generate meal plan');
+      }
+
+      // Transform AI response to store format
+      const aiPlan = response.data.mealPlan;
+      const totalPeople = answers.household.adults + answers.household.children;
+      
+      return transformAIPlanToStorePlan(aiPlan, totalPeople, answers);
+    } catch (error) {
+      console.error('AI generation failed, using fallback:', error);
+      // Fallback to mock data if AI fails
+      return generateMockMealPlan(answers);
+    }
   },
 
   // Generate grocery list from meal plan
@@ -46,7 +74,51 @@ export const api = {
   },
 };
 
-// Mock data generators for development
+// Transform AI plan to store format
+function transformAIPlanToStorePlan(
+  aiPlan: { id: string; startDate: string; entries: Array<{ id: string; date: string; mealType: string; recipeName?: string; prepTime?: number; description?: string; servings?: number }> },
+  totalPeople: number,
+  answers: QuestionnaireAnswers
+): WeeklyMealPlan {
+  type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+  const dayNames: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  
+  // Create empty days structure
+  const days: Record<DayOfWeek, DayPlan> = {
+    monday: {}, tuesday: {}, wednesday: {}, thursday: {}, friday: {}, saturday: {}, sunday: {}
+  };
+  
+  // Map entries to days
+  aiPlan.entries.forEach((entry) => {
+    const entryDate = new Date(entry.date);
+    const dayIndex = (entryDate.getDay() + 6) % 7; // Convert Sunday=0 to Monday=0
+    const dayName = dayNames[dayIndex];
+    
+    const mealItem: MealItem = {
+      id: entry.id || crypto.randomUUID(),
+      name: entry.recipeName || 'Receta',
+      description: entry.description || '',
+      prepTimeMinutes: entry.prepTime || 30,
+      servings: entry.servings || totalPeople,
+      ingredients: [],
+      instructions: [],
+    };
+    
+    const mealType = entry.mealType as 'breakfast' | 'lunch' | 'dinner' | 'snack';
+    if (days[dayName] && ['breakfast', 'lunch', 'dinner', 'snack'].includes(mealType)) {
+      days[dayName][mealType] = mealItem;
+    }
+  });
+  
+  return {
+    id: aiPlan.id,
+    weekStartDate: aiPlan.startDate,
+    days,
+    estimatedCost: answers.budget.weeklyBudget * 0.85,
+  };
+}
+
+// Mock data generators for development (fallback)
 function generateMockMealPlan(answers: QuestionnaireAnswers): WeeklyMealPlan {
   const totalPeople = answers.household.adults + answers.household.children;
 

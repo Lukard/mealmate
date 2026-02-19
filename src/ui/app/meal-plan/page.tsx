@@ -149,7 +149,7 @@ function AIGenerationModal({
 
 export default function MealPlanPage() {
   const router = useRouter();
-  const { currentMealPlan, isQuestionnaireComplete, groceryList, setMealPlan } = useStore();
+  const { currentMealPlan, isQuestionnaireComplete, groceryList, setMealPlan, answers } = useStore();
   const [selectedMeal, setSelectedMeal] = useState<{
     meal: MealItem;
     mealType: MealType;
@@ -180,15 +180,25 @@ export default function MealPlanPage() {
       // Get next week's date range
       const { startDate, endDate } = getWeekDateRange(0);
       
+      // Use preferences from questionnaire if available
+      const userMeals = answers?.schedule?.meals || ['breakfast', 'lunch', 'dinner'];
+      const cookingTime = answers?.schedule?.cookingTime || 'moderate';
+      const maxPrepTime = cookingTime === 'minimal' ? 20 : cookingTime === 'moderate' ? 45 : 90;
+      
       const response = await aiApi.generateMealPlan({
         startDate,
         endDate,
         preferences: {
-          includeBreakfast: true,
-          includeLunch: true,
-          includeDinner: true,
-          includeSnacks: false,
-          variety: 'medium',
+          includeBreakfast: userMeals.includes('breakfast'),
+          includeLunch: userMeals.includes('lunch'),
+          includeDinner: userMeals.includes('dinner'),
+          includeSnacks: userMeals.includes('snack'),
+          variety: 'high',
+          maxPrepTime,
+          budgetLimit: answers?.budget?.weeklyBudget,
+        },
+        context: {
+          cuisineFocus: answers?.preferences?.cuisineTypes,
         },
       });
 
