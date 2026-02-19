@@ -182,8 +182,7 @@ export default function MealPlanPage() {
       
       // Use preferences from questionnaire if available
       const userMeals = answers?.schedule?.meals || ['breakfast', 'lunch', 'dinner'];
-      const cookingTime = answers?.schedule?.cookingTime || 'moderate';
-      const maxPrepTime = cookingTime === 'minimal' ? 20 : cookingTime === 'moderate' ? 45 : 90;
+      const maxPrepTime = answers?.schedule?.maxPrepTimeMinutes || 45;
       
       const response = await aiApi.generateMealPlan({
         startDate,
@@ -198,7 +197,7 @@ export default function MealPlanPage() {
           budgetLimit: answers?.budget?.weeklyBudget,
         },
         context: {
-          cuisineFocus: answers?.preferences?.cuisineTypes,
+          cuisineFocus: answers?.preferences?.cuisines,
         },
       });
 

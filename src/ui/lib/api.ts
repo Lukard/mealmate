@@ -27,12 +27,11 @@ export const api = {
           includeDinner: answers.schedule.meals.includes('dinner'),
           includeSnacks: answers.schedule.meals.includes('snack'),
           variety: 'high',
-          maxPrepTime: answers.schedule.cookingTime === 'minimal' ? 20 : 
-                       answers.schedule.cookingTime === 'moderate' ? 45 : 90,
+          maxPrepTime: answers.schedule.maxPrepTimeMinutes || 45,
           budgetLimit: answers.budget.weeklyBudget,
         },
         context: {
-          cuisineFocus: answers.preferences.cuisineTypes,
+          cuisineFocus: answers.preferences.cuisines,
         },
       });
 
