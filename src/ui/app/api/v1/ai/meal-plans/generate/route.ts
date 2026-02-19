@@ -109,17 +109,38 @@ Por favor genera el plan en formato JSON.`;
     // Parse AI response
     const aiPlan = JSON.parse(content);
 
+    // Transform days to entries format expected by frontend
+    const entries = aiPlan.mealPlan.days.flatMap((day: { date: string; meals: Record<string, { name: string; prepTime: number; description: string }> }) => {
+      const dayEntries = [];
+      for (const [mealType, meal] of Object.entries(day.meals)) {
+        if (meal) {
+          dayEntries.push({
+            id: crypto.randomUUID(),
+            date: day.date,
+            mealType,
+            recipeName: meal.name,
+            prepTime: meal.prepTime,
+            description: meal.description,
+          });
+        }
+      }
+      return dayEntries;
+    });
+
     return NextResponse.json({
       success: true,
       data: {
-        id: crypto.randomUUID(),
-        name: `Plan ${startDate} - ${endDate}`,
-        startDate,
-        endDate,
-        status: 'draft',
-        ...aiPlan.mealPlan,
+        mealPlan: {
+          id: crypto.randomUUID(),
+          name: `Plan ${startDate} - ${endDate}`,
+          startDate,
+          endDate,
+          status: 'draft',
+          aiExplanation: aiPlan.mealPlan.explanation,
+          entries,
+        },
         summary: {
-          totalMeals: aiPlan.mealPlan.days.length * 2,
+          totalMeals: entries.length,
           estimatedCost: aiPlan.estimatedWeeklyCost || 80,
           shoppingTips: aiPlan.shoppingTips || [],
         },
