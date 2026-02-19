@@ -21,7 +21,8 @@ export function AdditionalNotes({ onNext }: AdditionalNotesProps) {
       goals: answers.health?.goals ?? [],
       additionalNotes: notes,
     });
-  }, [notes, setHealthAnswers, answers.health]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notes, setHealthAnswers]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;

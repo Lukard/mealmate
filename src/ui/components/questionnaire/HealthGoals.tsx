@@ -108,7 +108,8 @@ export function HealthGoals({ onNext }: HealthGoalsProps) {
       goals: selected,
       additionalNotes: answers.health?.additionalNotes ?? '',
     });
-  }, [selected, setHealthAnswers, answers.health?.additionalNotes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, setHealthAnswers]);
 
   const toggleOption = (id: HealthGoal) => {
     if (id === 'balanced') {
