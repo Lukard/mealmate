@@ -7,10 +7,16 @@ interface MealPlanRequest {
   startDate: string;
   endDate: string;
   preferences?: {
+    includeBreakfast?: boolean;
     includeLunch?: boolean;
     includeDinner?: boolean;
+    includeSnacks?: boolean;
     variety?: 'low' | 'medium' | 'high';
     maxPrepTime?: number;
+    budgetLimit?: number;
+  };
+  context?: {
+    cuisineFocus?: string[];
   };
 }
 
