@@ -33,6 +33,10 @@ export const api = {
         context: {
           cuisineFocus: answers.preferences.cuisines,
         },
+        health: {
+          goals: answers.health?.goals || [],
+          additionalNotes: answers.health?.additionalNotes || '',
+        },
       });
 
       if (!response.success || !response.data?.mealPlan) {

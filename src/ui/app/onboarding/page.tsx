@@ -11,6 +11,8 @@ import {
   BudgetRange,
   MealFrequency,
   CuisinePreferences,
+  HealthGoals,
+  AdditionalNotes,
 } from '@/components/questionnaire';
 import { useStore, type QuestionnaireAnswers } from '@/lib/store';
 import { api } from '@/lib/api';
@@ -21,6 +23,8 @@ const steps = [
   { number: 3, title: 'Presupuesto' },
   { number: 4, title: 'Comidas' },
   { number: 5, title: 'Preferencias' },
+  { number: 6, title: 'Salud' },
+  { number: 7, title: 'Detalles' },
 ];
 
 export default function OnboardingPage() {
@@ -30,7 +34,7 @@ export default function OnboardingPage() {
   const [error, setError] = useState<string | null>(null);
 
   const handleNext = async () => {
-    if (currentStep < 5) {
+    if (currentStep < 7) {
       nextStep();
     } else {
       // Generate meal plan
@@ -56,6 +60,7 @@ export default function OnboardingPage() {
         budget: answers.budget ?? { weeklyBudget: 100, preferCheaper: false },
         schedule: answers.schedule ?? { meals: ['breakfast', 'lunch', 'dinner'], maxPrepTimeMinutes: 45 },
         preferences: answers.preferences ?? { cuisines: [], cookingSkill: 'intermediate', avoidIngredients: [] },
+        health: answers.health ?? { goals: [], additionalNotes: '' },
       };
 
       // Generate meal plan
@@ -91,6 +96,10 @@ export default function OnboardingPage() {
         return <MealFrequency onNext={handleNext} />;
       case 5:
         return <CuisinePreferences onNext={handleNext} />;
+      case 6:
+        return <HealthGoals onNext={handleNext} />;
+      case 7:
+        return <AdditionalNotes onNext={handleNext} />;
       default:
         return null;
     }
@@ -172,7 +181,7 @@ export default function OnboardingPage() {
             isLoading={isGenerating}
             className="flex-1"
           >
-            {currentStep === 5 ? (
+            {currentStep === 7 ? (
               isGenerating ? (
                 'Generando tu plan...'
               ) : (
@@ -195,7 +204,7 @@ export default function OnboardingPage() {
         </div>
 
         {/* Skip option for non-required steps */}
-        {currentStep > 1 && currentStep < 5 && (
+        {currentStep > 1 && currentStep < 7 && (
           <button
             onClick={handleNext}
             className="mt-4 w-full text-center text-sm text-gray-500 hover:text-gray-700 transition-colors"

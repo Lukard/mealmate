@@ -3,6 +3,27 @@ import { NextRequest, NextResponse } from 'next/server';
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
+type HealthGoal =
+  | 'weight-loss'
+  | 'high-protein'
+  | 'low-sugar'
+  | 'high-fiber'
+  | 'heart-healthy'
+  | 'low-carb'
+  | 'whole-foods'
+  | 'balanced';
+
+const goalLabels: Record<HealthGoal, string> = {
+  'weight-loss': 'Pérdida de peso (calorías controladas)',
+  'high-protein': 'Alto en proteína',
+  'low-sugar': 'Bajo en azúcar',
+  'high-fiber': 'Alto en fibra',
+  'heart-healthy': 'Salud cardiovascular (bajo en grasas saturadas y sodio)',
+  'low-carb': 'Bajo en carbohidratos',
+  'whole-foods': 'Preferir alimentos naturales, evitar ultraprocesados',
+  'balanced': 'Dieta equilibrada general',
+};
+
 interface MealPlanRequest {
   startDate: string;
   endDate: string;
@@ -18,6 +39,10 @@ interface MealPlanRequest {
   context?: {
     cuisineFocus?: string[];
   };
+  health?: {
+    goals: HealthGoal[];
+    additionalNotes: string;
+  };
 }
 
 const SYSTEM_PROMPT = `Eres un nutricionista y chef experto especializado en planificación de comidas para familias españolas.
@@ -31,6 +56,8 @@ Reglas IMPORTANTES:
 4. Usa ingredientes de temporada y recetas españolas variadas
 5. Respeta el tiempo de preparación máximo indicado
 6. Cada plato debe tener un nombre único y específico
+7. RESPETA ESTRICTAMENTE los objetivos de salud del usuario - adapta todas las recetas para cumplirlos
+8. Ten en cuenta las observaciones adicionales del usuario sobre su salud o preferencias nutricionales
 
 Formato de respuesta (JSON estricto):
 {
@@ -108,6 +135,13 @@ export async function POST(request: NextRequest) {
     
     const mealsText = mealsToInclude.length > 0 ? mealsToInclude.join(', ') : 'almuerzo y cena';
 
+    // Build health goals text
+    const healthGoals = body.health?.goals || [];
+    const healthGoalsText = healthGoals.length > 0
+      ? healthGoals.map((g: HealthGoal) => goalLabels[g]).join(', ')
+      : 'Sin objetivos específicos';
+    const additionalNotes = body.health?.additionalNotes || 'Ninguna';
+
     const userPrompt = `Genera un plan de comidas para ${days} días, del ${startDate} al ${endDate}.
 
 Preferencias del usuario:
@@ -117,11 +151,19 @@ Preferencias del usuario:
 - Tiempo máximo de preparación por plato: ${preferences?.maxPrepTime || 45} minutos
 ${preferences?.budgetLimit ? `- Presupuesto semanal aproximado: ${preferences.budgetLimit}€` : ''}
 
+OBJETIVOS DE SALUD:
+- ${healthGoalsText}
+
+OBSERVACIONES ADICIONALES DEL USUARIO:
+${additionalNotes}
+
 Requisitos:
 1. Genera recetas DIFERENTES para cada día (no repitas platos)
 2. Solo incluye las comidas especificadas (${mealsText})
 3. Varía los ingredientes principales entre días
 4. Usa nombres de platos en español
+5. ADAPTA todas las recetas para cumplir con los objetivos de salud indicados
+6. Ten en cuenta las observaciones adicionales del usuario
 
 Por favor genera el plan en formato JSON siguiendo exactamente el schema indicado.`;
 

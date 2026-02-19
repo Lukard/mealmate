@@ -26,6 +26,16 @@ export type CuisineType =
 
 export type CookingSkill = 'beginner' | 'intermediate' | 'advanced';
 
+export type HealthGoal =
+  | 'weight-loss'
+  | 'high-protein'
+  | 'low-sugar'
+  | 'high-fiber'
+  | 'heart-healthy'
+  | 'low-carb'
+  | 'whole-foods'
+  | 'balanced';
+
 export interface HouseholdInfo {
   adults: number;
   children: number;
@@ -47,12 +57,18 @@ export interface PreferencesInfo {
   avoidIngredients: string[];
 }
 
+export interface HealthInfo {
+  goals: HealthGoal[];
+  additionalNotes: string;
+}
+
 export interface QuestionnaireAnswers {
   household: HouseholdInfo;
   dietary: DietaryRestriction[];
   budget: BudgetInfo;
   schedule: ScheduleInfo;
   preferences: PreferencesInfo;
+  health: HealthInfo;
 }
 
 // Meal plan types
@@ -129,6 +145,7 @@ interface AppState {
   setBudgetAnswers: (budget: BudgetInfo) => void;
   setScheduleAnswers: (schedule: ScheduleInfo) => void;
   setPreferencesAnswers: (preferences: PreferencesInfo) => void;
+  setHealthAnswers: (health: HealthInfo) => void;
   completeQuestionnaire: () => void;
   setMealPlan: (plan: WeeklyMealPlan) => void;
   setGroceryList: (list: GroceryList) => void;
@@ -142,6 +159,7 @@ const initialAnswers: Partial<QuestionnaireAnswers> = {
   budget: { weeklyBudget: 100, preferCheaper: false },
   schedule: { meals: ['breakfast', 'lunch', 'dinner'], maxPrepTimeMinutes: 45 },
   preferences: { cuisines: [], cookingSkill: 'intermediate', avoidIngredients: [] },
+  health: { goals: [], additionalNotes: '' },
 };
 
 export const useStore = create<AppState>()(
@@ -158,7 +176,7 @@ export const useStore = create<AppState>()(
       setStep: (step) => set({ currentStep: step }),
 
       nextStep: () => set((state) => ({
-        currentStep: Math.min(state.currentStep + 1, 5)
+        currentStep: Math.min(state.currentStep + 1, 7)
       })),
 
       prevStep: () => set((state) => ({
@@ -183,6 +201,10 @@ export const useStore = create<AppState>()(
 
       setPreferencesAnswers: (preferences) => set((state) => ({
         answers: { ...state.answers, preferences }
+      })),
+
+      setHealthAnswers: (health) => set((state) => ({
+        answers: { ...state.answers, health }
       })),
 
       completeQuestionnaire: () => set({ isQuestionnaireComplete: true }),

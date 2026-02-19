@@ -4,3 +4,5 @@ export { DietaryPreferences } from './DietaryPreferences';
 export { BudgetRange } from './BudgetRange';
 export { MealFrequency } from './MealFrequency';
 export { CuisinePreferences } from './CuisinePreferences';
+export { HealthGoals } from './HealthGoals';
+export { AdditionalNotes } from './AdditionalNotes';

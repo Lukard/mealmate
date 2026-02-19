@@ -9,6 +9,16 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 // Types
 // ============================================
 
+export type HealthGoal =
+  | 'weight-loss'
+  | 'high-protein'
+  | 'low-sugar'
+  | 'high-fiber'
+  | 'heart-healthy'
+  | 'low-carb'
+  | 'whole-foods'
+  | 'balanced';
+
 export interface GenerateMealPlanRequest {
   startDate: string; // YYYY-MM-DD
   endDate: string;   // YYYY-MM-DD
@@ -28,6 +38,10 @@ export interface GenerateMealPlanRequest {
     cuisineFocus?: string[];
     excludeRecipes?: string[];
     includeRecipes?: string[];
+  };
+  health?: {
+    goals: HealthGoal[];
+    additionalNotes: string;
   };
 }
 
