@@ -35,8 +35,13 @@ export interface MealPlanEntry {
   id: string;
   date: string;
   mealType: string;
-  recipeId: string;
-  servings: number;
+  recipeId?: string;
+  recipeName?: string;
+  description?: string;
+  prepTime?: number;
+  servings?: number;
+  ingredients?: string[];
+  instructions?: string[];
   notes?: string;
 }
 

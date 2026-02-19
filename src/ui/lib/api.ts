@@ -74,8 +74,20 @@ export const api = {
 };
 
 // Transform AI plan to store format
+interface AIEntry {
+  id: string;
+  date: string;
+  mealType: string;
+  recipeName?: string;
+  prepTime?: number;
+  description?: string;
+  servings?: number;
+  ingredients?: string[];
+  instructions?: string[];
+}
+
 function transformAIPlanToStorePlan(
-  aiPlan: { id: string; startDate: string; entries: Array<{ id: string; date: string; mealType: string; recipeName?: string; prepTime?: number; description?: string; servings?: number }> },
+  aiPlan: { id: string; startDate: string; entries: AIEntry[] },
   totalPeople: number,
   answers: QuestionnaireAnswers
 ): WeeklyMealPlan {
@@ -99,8 +111,8 @@ function transformAIPlanToStorePlan(
       description: entry.description || '',
       prepTimeMinutes: entry.prepTime || 30,
       servings: entry.servings || totalPeople,
-      ingredients: [],
-      instructions: [],
+      ingredients: entry.ingredients || [],
+      instructions: entry.instructions || [],
     };
     
     const mealType = entry.mealType as 'breakfast' | 'lunch' | 'dinner' | 'snack';

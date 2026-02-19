@@ -235,14 +235,22 @@ export default function MealPlanPage() {
         const dayIndex = (entryDate.getDay() + 6) % 7; // Convert Sunday=0 to Monday=0
         const dayName = dayNames[dayIndex];
         
+        const entryData = entry as unknown as { 
+          recipeName?: string; 
+          description?: string; 
+          prepTime?: number;
+          ingredients?: string[];
+          instructions?: string[];
+        };
+        
         const mealItem: MealItem = {
           id: entry.id || crypto.randomUUID(),
-          name: (entry as unknown as { recipeName?: string }).recipeName || 'Receta',
-          description: (entry as unknown as { description?: string }).description || '',
-          prepTimeMinutes: (entry as unknown as { prepTime?: number }).prepTime || 30,
+          name: entryData.recipeName || 'Receta',
+          description: entryData.description || '',
+          prepTimeMinutes: entryData.prepTime || 30,
           servings: entry.servings || 4,
-          ingredients: [],
-          instructions: [],
+          ingredients: entryData.ingredients || [],
+          instructions: entryData.instructions || [],
         };
         
         const mealType = entry.mealType as 'breakfast' | 'lunch' | 'dinner' | 'snack';

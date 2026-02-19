@@ -40,10 +40,34 @@ Formato de respuesta (JSON estricto):
       {
         "date": "YYYY-MM-DD",
         "meals": {
-          "breakfast": { "name": "Nombre único del plato", "prepTime": 15, "description": "Descripción" },
-          "lunch": { "name": "Nombre único del plato", "prepTime": 30, "description": "Descripción" },
-          "dinner": { "name": "Nombre único del plato", "prepTime": 25, "description": "Descripción" },
-          "snack": { "name": "Nombre único del plato", "prepTime": 10, "description": "Descripción" }
+          "breakfast": { 
+            "name": "Nombre único del plato", 
+            "prepTime": 15, 
+            "description": "Descripción breve",
+            "ingredients": ["ingrediente 1 con cantidad", "ingrediente 2 con cantidad"],
+            "instructions": ["Paso 1", "Paso 2", "Paso 3"]
+          },
+          "lunch": { 
+            "name": "Nombre único del plato", 
+            "prepTime": 30, 
+            "description": "Descripción breve",
+            "ingredients": ["ingrediente 1", "ingrediente 2"],
+            "instructions": ["Paso 1", "Paso 2"]
+          },
+          "dinner": { 
+            "name": "Nombre único del plato", 
+            "prepTime": 25, 
+            "description": "Descripción breve",
+            "ingredients": ["ingrediente 1", "ingrediente 2"],
+            "instructions": ["Paso 1", "Paso 2"]
+          },
+          "snack": { 
+            "name": "Nombre único del plato", 
+            "prepTime": 10, 
+            "description": "Descripción breve",
+            "ingredients": ["ingrediente 1"],
+            "instructions": ["Paso 1"]
+          }
         }
       }
     ]
@@ -52,7 +76,11 @@ Formato de respuesta (JSON estricto):
   "estimatedWeeklyCost": 80
 }
 
-IMPORTANTE: Solo incluye en "meals" las comidas solicitadas por el usuario. Si solo pide almuerzo y cena, NO incluyas breakfast ni snack.`;
+IMPORTANTE: 
+- Solo incluye en "meals" las comidas solicitadas por el usuario
+- Cada receta DEBE tener ingredients (lista de ingredientes con cantidades) e instructions (pasos de preparación)
+- Los ingredientes deben incluir cantidades aproximadas (ej: "200g de pollo", "2 tomates maduros")
+- Las instrucciones deben ser claras y paso a paso`;
 
 export async function POST(request: NextRequest) {
   if (!GROQ_API_KEY) {
@@ -139,7 +167,15 @@ Por favor genera el plan en formato JSON siguiendo exactamente el schema indicad
     const aiPlan = JSON.parse(content);
 
     // Transform days to entries format expected by frontend
-    const entries = aiPlan.mealPlan.days.flatMap((day: { date: string; meals: Record<string, { name: string; prepTime: number; description: string }> }) => {
+    interface MealData {
+      name: string;
+      prepTime: number;
+      description: string;
+      ingredients?: string[];
+      instructions?: string[];
+    }
+    
+    const entries = aiPlan.mealPlan.days.flatMap((day: { date: string; meals: Record<string, MealData> }) => {
       const dayEntries = [];
       for (const [mealType, meal] of Object.entries(day.meals)) {
         if (meal) {
@@ -150,6 +186,8 @@ Por favor genera el plan en formato JSON siguiendo exactamente el schema indicad
             recipeName: meal.name,
             prepTime: meal.prepTime,
             description: meal.description,
+            ingredients: meal.ingredients || [],
+            instructions: meal.instructions || [],
           });
         }
       }
