@@ -3,8 +3,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Button, Card } from '@/components/ui';
+import { Button, Card, Toast } from '@/components/ui';
 import { useStore, type GroceryItem } from '@/lib/store';
+import { formatGroceryListForShare, shareGroceryList } from '@/lib/share';
+import { generateGroceryListPDF } from '@/lib/pdf';
 import clsx from 'clsx';
 
 type CategoryGroup = {
@@ -13,10 +15,17 @@ type CategoryGroup = {
   checked: number;
 };
 
+type ToastState = {
+  message: string;
+  type: 'success' | 'error';
+} | null;
+
 export default function GroceryListPage() {
   const router = useRouter();
   const { groceryList, isQuestionnaireComplete, toggleGroceryItem } = useStore();
   const [filter, setFilter] = useState<'all' | 'pending' | 'checked'>('all');
+  const [toast, setToast] = useState<ToastState>(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Redirect if not complete
   useEffect(() => {
@@ -70,6 +79,42 @@ export default function GroceryListPage() {
       percentage: total > 0 ? Math.round((checked / total) * 100) : 0,
     };
   }, [groceryList]);
+
+  // Handle share button click
+  const handleShare = async () => {
+    if (!groceryList) return;
+
+    const text = formatGroceryListForShare(groceryList, categorizedItems, progress);
+    const result = await shareGroceryList(text);
+
+    switch (result) {
+      case 'shared':
+        setToast({ message: '¡Lista compartida!', type: 'success' });
+        break;
+      case 'copied':
+        setToast({ message: 'Lista copiada al portapapeles', type: 'success' });
+        break;
+      case 'error':
+        setToast({ message: 'No se pudo compartir la lista', type: 'error' });
+        break;
+    }
+  };
+
+  // Handle PDF download
+  const handleDownloadPDF = async () => {
+    if (!groceryList) return;
+
+    setIsGeneratingPDF(true);
+    try {
+      await generateGroceryListPDF(groceryList, categorizedItems);
+      setToast({ message: '¡PDF descargado!', type: 'success' });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      setToast({ message: 'Error al generar el PDF', type: 'error' });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   if (!groceryList) {
     return (
@@ -247,17 +292,26 @@ export default function GroceryListPage() {
 
         {/* Action buttons */}
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
-          <Button fullWidth size="lg" variant="secondary">
+          <Button fullWidth size="lg" variant="secondary" onClick={handleShare}>
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
             Compartir lista
           </Button>
-          <Button fullWidth size="lg">
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Descargar PDF
+          <Button fullWidth size="lg" onClick={handleDownloadPDF} disabled={isGeneratingPDF}>
+            {isGeneratingPDF ? (
+              <>
+                <div className="w-5 h-5 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Generando...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Descargar PDF
+              </>
+            )}
           </Button>
         </div>
 
@@ -278,6 +332,15 @@ export default function GroceryListPage() {
           </div>
         </Card>
       </main>
+
+      {/* Toast notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }
