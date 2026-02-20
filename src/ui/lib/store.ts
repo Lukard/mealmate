@@ -14,6 +14,8 @@ export type DietaryRestriction =
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
 
+export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+
 export type CuisineType =
   | 'spanish'
   | 'mediterranean'
@@ -151,6 +153,7 @@ interface AppState {
   setGroceryList: (list: GroceryList) => void;
   toggleGroceryItem: (itemId: string) => void;
   resetQuestionnaire: () => void;
+  updateMeal: (day: DayOfWeek, mealType: MealType, newMeal: MealItem) => void;
 }
 
 const initialAnswers: Partial<QuestionnaireAnswers> = {
@@ -231,6 +234,25 @@ export const useStore = create<AppState>()(
         isQuestionnaireComplete: false,
         currentMealPlan: null,
         groceryList: null,
+      }),
+
+      updateMeal: (day, mealType, newMeal) => set((state) => {
+        if (!state.currentMealPlan) return state;
+
+        return {
+          currentMealPlan: {
+            ...state.currentMealPlan,
+            days: {
+              ...state.currentMealPlan.days,
+              [day]: {
+                ...state.currentMealPlan.days[day],
+                [mealType]: newMeal,
+              },
+            },
+          },
+          // Invalidar grocery list para forzar regeneración
+          groceryList: null,
+        };
       }),
     }),
     {

@@ -104,6 +104,92 @@ export interface AIStatusResponse {
   };
 }
 
+// Recipe alternatives types
+export interface RecipeAlternative {
+  id: string;
+  name: string;
+  description: string;
+  prepTimeMinutes: number;
+  servings: number;
+  ingredients: string[];
+  instructions: string[];
+  whyRecommended: string;
+}
+
+export interface GetAlternativesRequest {
+  currentRecipeName: string;
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  count?: number;
+}
+
+export interface GetAlternativesResponse {
+  success: boolean;
+  data?: {
+    alternatives: RecipeAlternative[];
+    aiExplanation: string;
+  };
+  error?: { code: string; message: string };
+}
+
+// Partial type for user answers (to avoid circular dependency)
+interface PartialQuestionnaireAnswers {
+  dietary?: string[];
+  health?: { goals?: string[]; additionalNotes?: string };
+  preferences?: { cuisines?: string[]; avoidIngredients?: string[] };
+  schedule?: { maxPrepTimeMinutes?: number };
+}
+
+// ============================================
+// Recipe Alternatives Types
+// ============================================
+
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
+
+export interface RecipeAlternative {
+  id: string;
+  name: string;
+  description: string;
+  prepTimeMinutes: number;
+  servings: number;
+  ingredients: string[];
+  instructions: string[];
+  whyRecommended: string;
+}
+
+export interface GetAlternativesRequest {
+  currentRecipeName: string;
+  mealType: MealType;
+  count?: number;
+}
+
+// Flexible type that accepts partial questionnaire answers
+export interface QuestionnaireAnswersLike {
+  dietary?: string[];
+  health?: {
+    goals?: string[];
+    additionalNotes?: string;
+  };
+  preferences?: {
+    cuisines?: string[];
+    avoidIngredients?: string[];
+  };
+  schedule?: {
+    maxPrepTimeMinutes?: number;
+  };
+}
+
+export interface GetAlternativesResponse {
+  success: boolean;
+  data?: {
+    alternatives: RecipeAlternative[];
+    aiExplanation: string;
+  };
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+
 // ============================================
 // Helper Functions
 // ============================================
@@ -194,6 +280,35 @@ export const aiApi = {
    */
   async getStatus(): Promise<AIStatusResponse> {
     return fetchWithAuth<AIStatusResponse>('/ai/status');
+  },
+
+  /**
+   * Get recipe alternatives using AI
+   * @param request - Current recipe info and preferences
+   * @param answers - User questionnaire answers (partial or full)
+   * @returns List of alternative recipes with explanations
+   */
+  async getRecipeAlternatives(
+    request: GetAlternativesRequest,
+    answers: QuestionnaireAnswersLike
+  ): Promise<GetAlternativesResponse> {
+    return fetchWithAuth<GetAlternativesResponse>('/ai/recipes/alternatives', {
+      method: 'POST',
+      body: JSON.stringify({
+        currentRecipe: {
+          name: request.currentRecipeName,
+          mealType: request.mealType,
+        },
+        userPreferences: {
+          dietary: answers.dietary || [],
+          healthGoals: answers.health?.goals || [],
+          cuisines: answers.preferences?.cuisines || [],
+          maxPrepTime: answers.schedule?.maxPrepTimeMinutes || 45,
+          avoidIngredients: answers.preferences?.avoidIngredients || [],
+        },
+        count: request.count || 4,
+      }),
+    });
   },
 };
 

@@ -10,6 +10,7 @@ interface RecipeModalProps {
   onClose: () => void;
   meal: MealItem | null;
   mealType: MealType | null;
+  onSwapClick?: () => void;
 }
 
 const mealTypeLabels: Record<MealType, string> = {
@@ -19,7 +20,7 @@ const mealTypeLabels: Record<MealType, string> = {
   snack: 'Merienda',
 };
 
-export function RecipeModal({ isOpen, onClose, meal, mealType }: RecipeModalProps) {
+export function RecipeModal({ isOpen, onClose, meal, mealType, onSwapClick }: RecipeModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -177,7 +178,7 @@ export function RecipeModal({ isOpen, onClose, meal, mealType }: RecipeModalProp
             <Button variant="secondary" fullWidth onClick={onClose}>
               Cerrar
             </Button>
-            <Button fullWidth>
+            <Button fullWidth onClick={onSwapClick} disabled={!onSwapClick}>
               Cambiar receta
             </Button>
           </div>

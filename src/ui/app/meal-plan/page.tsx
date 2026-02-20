@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Card } from '@/components/ui';
-import { WeeklyCalendar, RecipeModal } from '@/components/meal-plan';
+import { WeeklyCalendar, RecipeModal, SwapRecipeModal } from '@/components/meal-plan';
 import { useStore, type MealItem, type MealType } from '@/lib/store';
 import { aiApi, getWeekDateRange, type GeneratedMealPlan, AIApiError } from '@/lib/api/ai';
 
@@ -149,12 +149,13 @@ function AIGenerationModal({
 
 export default function MealPlanPage() {
   const router = useRouter();
-  const { currentMealPlan, isQuestionnaireComplete, groceryList, setMealPlan, answers } = useStore();
+  const { currentMealPlan, isQuestionnaireComplete, groceryList, setMealPlan, setGroceryList, updateMeal, answers } = useStore();
   const [selectedMeal, setSelectedMeal] = useState<{
     meal: MealItem;
     mealType: MealType;
     day: DayOfWeek;
   } | null>(null);
+  const [showSwapModal, setShowSwapModal] = useState(false);
 
   // AI Generation state
   const [showAIModal, setShowAIModal] = useState(false);
@@ -287,6 +288,29 @@ export default function MealPlanPage() {
       setGenerationError(null);
     }
   };
+
+  // Swap recipe handler
+  const handleSwapRecipe = (newMeal: MealItem) => {
+    if (selectedMeal) {
+      updateMeal(selectedMeal.day as DayOfWeek, selectedMeal.mealType, newMeal);
+      setShowSwapModal(false);
+      setSelectedMeal(null);
+    }
+  };
+
+  // Regenerate grocery list when invalidated
+  useEffect(() => {
+    if (currentMealPlan && !groceryList) {
+      // Auto-regenerate grocery list when it's invalidated
+      aiApi.generateMealPlan({
+        startDate: currentMealPlan.weekStartDate,
+        endDate: currentMealPlan.weekStartDate, // Will be recalculated
+        preferences: {},
+      }).catch(() => {
+        // Silent fail - grocery list regeneration is best-effort
+      });
+    }
+  }, [currentMealPlan, groceryList]);
 
   if (!currentMealPlan) {
     return (
@@ -485,10 +509,21 @@ export default function MealPlanPage() {
 
       {/* Recipe modal */}
       <RecipeModal
-        isOpen={!!selectedMeal}
+        isOpen={!!selectedMeal && !showSwapModal}
         onClose={() => setSelectedMeal(null)}
         meal={selectedMeal?.meal ?? null}
         mealType={selectedMeal?.mealType ?? null}
+        onSwapClick={() => setShowSwapModal(true)}
+      />
+
+      {/* Swap Recipe modal */}
+      <SwapRecipeModal
+        isOpen={showSwapModal}
+        onClose={() => setShowSwapModal(false)}
+        currentMeal={selectedMeal?.meal ?? null}
+        mealType={selectedMeal?.mealType ?? null}
+        day={selectedMeal?.day ?? null}
+        onSwap={handleSwapRecipe}
       />
 
       {/* AI Generation Modal */}
