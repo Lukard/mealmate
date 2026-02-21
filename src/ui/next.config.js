@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@meal-automation/shared'],
+  transpilePackages: ['@meal-automation/shared', '@react-pdf/renderer'],
+  // Fix for @react-pdf/renderer - disable server-side canvas
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+    return config;
+  },
   images: {
     domains: ['images.unsplash.com'],
     remotePatterns: [

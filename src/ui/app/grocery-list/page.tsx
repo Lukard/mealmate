@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { Button, Card, Toast } from '@/components/ui';
 import { useStore, type GroceryItem } from '@/lib/store';
 import { formatGroceryListForShare, shareGroceryList } from '@/lib/share';
-import { generateGroceryListPDF } from '@/lib/pdf';
 import clsx from 'clsx';
 
 type CategoryGroup = {
@@ -100,12 +99,14 @@ export default function GroceryListPage() {
     }
   };
 
-  // Handle PDF download
+  // Handle PDF download (dynamic import to avoid SSR issues)
   const handleDownloadPDF = async () => {
     if (!groceryList) return;
 
     setIsGeneratingPDF(true);
     try {
+      // Dynamic import to load @react-pdf/renderer only on client
+      const { generateGroceryListPDF } = await import('@/lib/pdf');
       await generateGroceryListPDF(groceryList, categorizedItems);
       setToast({ message: '¡PDF descargado!', type: 'success' });
     } catch (error) {
