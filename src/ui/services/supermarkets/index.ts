@@ -43,6 +43,30 @@ export { BaseAdapter } from './adapters/base.adapter';
 // Adapters
 export { MercadonaAdapter } from './adapters/mercadona.adapter';
 
+// Mapper
+export {
+  IngredientMapper,
+  getIngredientMapper,
+  resetIngredientMapper,
+} from './mapper';
+
+// Sync
+export type {
+  PriceChange,
+  SyncResult,
+  SyncReport,
+  SyncConfig,
+  SyncProgress,
+} from './sync';
+
+export {
+  SyncService,
+  getSyncService,
+  resetSyncService,
+  scheduleSync,
+  scheduleRecurringSync,
+} from './sync';
+
 /**
  * Initialize the supermarket service with default configuration
  * Call this once at app startup

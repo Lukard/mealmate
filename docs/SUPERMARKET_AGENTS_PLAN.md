@@ -175,8 +175,8 @@
 | architect | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | mercadona-adapter | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | cache-service | ✅ Completado | 2026-02-21 | 2026-02-21 |
-| ingredient-mapper | ⏳ Pendiente | - | - |
-| sync-worker | ⏳ Pendiente | - | - |
+| ingredient-mapper | ✅ Completado | 2026-02-21 | 2026-02-21 |
+| sync-worker | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | api-endpoints | ⏳ Pendiente | - | - |
 | ui-integration | ⏳ Pendiente | - | - |
 | testing-qa | ⏳ Pendiente | - | - |
