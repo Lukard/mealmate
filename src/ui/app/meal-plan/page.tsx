@@ -162,6 +162,9 @@ export default function MealPlanPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [generatedPlan, setGeneratedPlan] = useState<GeneratedMealPlan | null>(null);
+  
+  // PDF Generation state
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Redirect to onboarding if not complete
   useEffect(() => {
@@ -295,6 +298,21 @@ export default function MealPlanPage() {
       updateMeal(selectedMeal.day as DayOfWeek, selectedMeal.mealType, newMeal);
       setShowSwapModal(false);
       setSelectedMeal(null);
+    }
+  };
+
+  // PDF download handler
+  const handleDownloadPDF = async () => {
+    if (!currentMealPlan) return;
+    
+    setIsGeneratingPDF(true);
+    try {
+      const { generateMealPlanPDF } = await import('@/lib/pdf');
+      await generateMealPlanPDF(currentMealPlan);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -498,11 +516,29 @@ export default function MealPlanPage() {
               Ver lista de compra
             </Button>
           </Link>
-          <Button variant="secondary" size="lg" className="flex-1">
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Descargar PDF
+          <Button 
+            variant="secondary" 
+            size="lg" 
+            className="flex-1"
+            onClick={handleDownloadPDF}
+            disabled={isGeneratingPDF}
+          >
+            {isGeneratingPDF ? (
+              <>
+                <svg className="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Generando...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Descargar PDF
+              </>
+            )}
           </Button>
         </div>
       </main>

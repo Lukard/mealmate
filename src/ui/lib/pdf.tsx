@@ -8,7 +8,7 @@ import {
   StyleSheet,
   pdf,
 } from '@react-pdf/renderer';
-import type { GroceryItem, GroceryList } from './store';
+import type { GroceryItem, GroceryList, WeeklyMealPlan, MealItem, DayPlan } from './store';
 
 // Mapeo de categoría → emoji
 const categoryEmojis: Record<string, string> = {
@@ -327,3 +327,271 @@ export async function generateGroceryListPDF(
 }
 
 export { GroceryListPDF };
+
+// ============================================
+// MEAL PLAN PDF
+// ============================================
+
+// Mapeo de día en inglés → español
+const dayNames: Record<string, string> = {
+  monday: 'Lunes',
+  tuesday: 'Martes',
+  wednesday: 'Miércoles',
+  thursday: 'Jueves',
+  friday: 'Viernes',
+  saturday: 'Sábado',
+  sunday: 'Domingo',
+};
+
+// Mapeo de tipo de comida → español + emoji
+const mealTypeNames: Record<string, { name: string; emoji: string }> = {
+  breakfast: { name: 'Desayuno', emoji: '🌅' },
+  lunch: { name: 'Almuerzo', emoji: '☀️' },
+  dinner: { name: 'Cena', emoji: '🌙' },
+  snack: { name: 'Merienda', emoji: '🍎' },
+};
+
+// Estilos para el Meal Plan PDF
+const mealPlanStyles = StyleSheet.create({
+  page: {
+    padding: 30,
+    fontFamily: 'Helvetica',
+    backgroundColor: '#ffffff',
+  },
+  header: {
+    marginBottom: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#22c55e',
+    paddingBottom: 15,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#22c55e',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 10,
+    color: '#6b7280',
+  },
+  costBadge: {
+    backgroundColor: '#22c55e',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+  },
+  costText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  costLabel: {
+    fontSize: 8,
+    color: '#ffffff',
+    opacity: 0.9,
+  },
+  // Day section
+  daySection: {
+    marginBottom: 12,
+  },
+  dayHeader: {
+    backgroundColor: '#f0fdf4',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    marginBottom: 6,
+  },
+  dayTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#166534',
+    textTransform: 'uppercase',
+  },
+  mealsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  mealCard: {
+    width: '48%',
+    backgroundColor: '#fafafa',
+    borderRadius: 4,
+    padding: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#22c55e',
+  },
+  mealTypeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  mealEmoji: {
+    fontSize: 10,
+    marginRight: 4,
+  },
+  mealType: {
+    fontSize: 8,
+    color: '#6b7280',
+    textTransform: 'uppercase',
+  },
+  mealName: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#374151',
+    marginBottom: 2,
+  },
+  mealDetails: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  mealDetail: {
+    fontSize: 7,
+    color: '#9ca3af',
+  },
+  emptyMeal: {
+    fontSize: 9,
+    color: '#d1d5db',
+    fontStyle: 'italic',
+  },
+  // Footer
+  footer: {
+    marginTop: 'auto',
+    paddingTop: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+  },
+  footerText: {
+    fontSize: 8,
+    color: '#9ca3af',
+    textAlign: 'center',
+  },
+});
+
+interface MealPlanPDFProps {
+  mealPlan: WeeklyMealPlan;
+}
+
+const MealPlanPDF = ({ mealPlan }: MealPlanPDFProps) => {
+  const weekStart = new Date(mealPlan.weekStartDate);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  const formatDate = (date: Date) => date.toLocaleDateString('es-ES', {
+    day: 'numeric',
+    month: 'short',
+  });
+
+  const dateRange = `${formatDate(weekStart)} - ${formatDate(weekEnd)}, ${weekStart.getFullYear()}`;
+
+  const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
+  const mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'] as const;
+
+  // Contar comidas totales
+  let totalMeals = 0;
+  days.forEach(day => {
+    const dayPlan = mealPlan.days[day];
+    mealTypes.forEach(type => {
+      if (dayPlan[type]) totalMeals++;
+    });
+  });
+
+  return (
+    <Document>
+      <Page size="A4" style={mealPlanStyles.page}>
+        {/* Header */}
+        <View style={mealPlanStyles.header}>
+          <View style={mealPlanStyles.headerContent}>
+            <View>
+              <Text style={mealPlanStyles.title}>Plan de Comidas - MealMate</Text>
+              <Text style={mealPlanStyles.subtitle}>{dateRange}</Text>
+              <Text style={mealPlanStyles.subtitle}>{totalMeals} comidas planificadas</Text>
+            </View>
+            <View style={mealPlanStyles.costBadge}>
+              <Text style={mealPlanStyles.costText}>{mealPlan.estimatedCost.toFixed(2)}€</Text>
+              <Text style={mealPlanStyles.costLabel}>Coste estimado</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Days */}
+        {days.map((day) => {
+          const dayPlan = mealPlan.days[day];
+          const meals = mealTypes.filter(type => dayPlan[type]);
+          
+          if (meals.length === 0) return null;
+
+          return (
+            <View key={day} style={mealPlanStyles.daySection} wrap={false}>
+              <View style={mealPlanStyles.dayHeader}>
+                <Text style={mealPlanStyles.dayTitle}>{dayNames[day]}</Text>
+              </View>
+              <View style={mealPlanStyles.mealsContainer}>
+                {mealTypes.map((mealType) => {
+                  const meal = dayPlan[mealType];
+                  if (!meal) return null;
+
+                  return (
+                    <View key={mealType} style={mealPlanStyles.mealCard}>
+                      <View style={mealPlanStyles.mealTypeRow}>
+                        <Text style={mealPlanStyles.mealEmoji}>
+                          {mealTypeNames[mealType].emoji}
+                        </Text>
+                        <Text style={mealPlanStyles.mealType}>
+                          {mealTypeNames[mealType].name}
+                        </Text>
+                      </View>
+                      <Text style={mealPlanStyles.mealName}>{meal.name}</Text>
+                      <View style={mealPlanStyles.mealDetails}>
+                        <Text style={mealPlanStyles.mealDetail}>
+                          ⏱️ {meal.prepTimeMinutes} min
+                        </Text>
+                        <Text style={mealPlanStyles.mealDetail}>
+                          👥 {meal.servings} pers.
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          );
+        })}
+
+        {/* Footer */}
+        <View style={mealPlanStyles.footer}>
+          <Text style={mealPlanStyles.footerText}>
+            Generado con MealMate • Tu asistente de planificación de comidas
+          </Text>
+        </View>
+      </Page>
+    </Document>
+  );
+};
+
+/**
+ * Genera y descarga el PDF del plan de comidas
+ */
+export async function generateMealPlanPDF(mealPlan: WeeklyMealPlan): Promise<void> {
+  const blob = await pdf(<MealPlanPDF mealPlan={mealPlan} />).toBlob();
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  
+  // Nombre del archivo con fecha de inicio de semana
+  const weekStart = new Date(mealPlan.weekStartDate).toISOString().split('T')[0];
+  link.download = `plan-comidas-mealmate-${weekStart}.pdf`;
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  URL.revokeObjectURL(url);
+}
+
+export { MealPlanPDF };
