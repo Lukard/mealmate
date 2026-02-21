@@ -389,33 +389,138 @@ https://world.openfoodfacts.org/api/v2/search?countries_tags=spain
 
 **Objetivo:** Integrar precios reales de Mercadona usando su API REST pública
 
-**Arquitectura:**
+**Arquitectura Multi-Supermercado (Extensible):**
+
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   MealMate UI   │────▶│  Mercadona       │────▶│  Mercadona API  │
-│                 │     │  Service (Node)   │     │  tienda.mercd.. │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
-                               │
-                               ▼
-                        ┌──────────────────┐
-                        │  Cache (Redis)   │
-                        │  TTL: 24h        │
-                        └──────────────────┘
+┌─────────────────┐     ┌──────────────────────────────────────────────┐
+│   MealMate UI   │────▶│           Supermarket Service                │
+│                 │     │  ┌────────────────────────────────────────┐  │
+└─────────────────┘     │  │         SupermarketAdapter (interface) │  │
+                        │  │  - searchProducts(query): Product[]    │  │
+                        │  │  - getProduct(id): Product             │  │
+                        │  │  - getCategories(): Category[]         │  │
+                        │  │  - getProductsByCategory(id): Product[]│  │
+                        │  └────────────────────────────────────────┘  │
+                        │          ▲           ▲           ▲           │
+                        │          │           │           │           │
+                        │  ┌───────┴───┐ ┌─────┴─────┐ ┌───┴───────┐  │
+                        │  │ Mercadona │ │  Carrefour │ │   DIA     │  │
+                        │  │  Adapter  │ │  Adapter   │ │  Adapter  │  │
+                        │  └───────────┘ └───────────┘ └───────────┘  │
+                        │          │           │           │           │
+                        └──────────┼───────────┼───────────┼───────────┘
+                                   │           │           │
+                                   ▼           ▼           ▼
+                        ┌──────────────────────────────────────────────┐
+                        │              Cache Layer (Redis)             │
+                        │  - Productos: TTL 24h                        │
+                        │  - Categorías: TTL 7 días                    │
+                        │  - Búsquedas: TTL 1h                         │
+                        └──────────────────────────────────────────────┘
+```
+
+**Principios de diseño:**
+- **Adapter Pattern:** Cada supermercado implementa la misma interfaz
+- **Plugin System:** Añadir nuevo supermercado = crear nuevo adapter
+- **Normalización:** Todos los adapters devuelven el mismo formato de datos
+- **Fallback Chain:** Si falla un supermercado, intenta con otro
+
+**Interfaces TypeScript:**
+
+```typescript
+// Modelo normalizado de producto (independiente del supermercado)
+interface NormalizedProduct {
+  id: string;
+  externalId: string;           // ID en el supermercado original
+  supermarket: SupermarketId;   // 'mercadona' | 'carrefour' | 'dia' | ...
+  name: string;
+  description?: string;
+  price: number;                // Precio en euros
+  pricePerUnit: number;         // Precio por kg/l/unidad
+  unit: 'kg' | 'l' | 'unit';
+  size: number;                 // Cantidad (ej: 1, 0.5, 500)
+  sizeFormat: string;           // Formato original (ej: "500g", "1L")
+  category: string;
+  subcategory?: string;
+  imageUrl?: string;
+  available: boolean;
+  lastUpdated: Date;
+}
+
+// Interfaz que todos los adapters deben implementar
+interface SupermarketAdapter {
+  readonly id: SupermarketId;
+  readonly name: string;
+  readonly baseUrl: string;
+  
+  // Métodos requeridos
+  searchProducts(query: string, limit?: number): Promise<NormalizedProduct[]>;
+  getProduct(externalId: string): Promise<NormalizedProduct | null>;
+  getCategories(): Promise<Category[]>;
+  getProductsByCategory(categoryId: string): Promise<NormalizedProduct[]>;
+  
+  // Métodos opcionales
+  isAvailable?(): Promise<boolean>;
+  getPostalCodeCoverage?(postalCode: string): Promise<boolean>;
+}
+
+// Registro de supermercados disponibles
+type SupermarketId = 'mercadona' | 'carrefour' | 'dia' | 'alcampo' | 'eroski' | 'lidl';
+
+// Factory para crear adapters
+class SupermarketFactory {
+  private adapters: Map<SupermarketId, SupermarketAdapter>;
+  
+  getAdapter(id: SupermarketId): SupermarketAdapter;
+  getAllAdapters(): SupermarketAdapter[];
+  getAvailableAdapters(postalCode?: string): Promise<SupermarketAdapter[]>;
+}
+```
+
+**Estructura de carpetas propuesta:**
+
+```
+src/
+├── services/
+│   └── supermarkets/
+│       ├── index.ts                    # Exports públicos
+│       ├── types.ts                    # Interfaces y tipos
+│       ├── factory.ts                  # SupermarketFactory
+│       ├── cache.ts                    # Capa de cache
+│       ├── adapters/
+│       │   ├── base.adapter.ts         # Clase base abstracta
+│       │   ├── mercadona.adapter.ts    # Implementación Mercadona
+│       │   ├── carrefour.adapter.ts    # Implementación Carrefour (futuro)
+│       │   └── dia.adapter.ts          # Implementación DIA (futuro)
+│       └── utils/
+│           ├── normalizer.ts           # Normalización de datos
+│           └── rate-limiter.ts         # Control de rate limiting
 ```
 
 **Tareas:**
 
 | # | Tarea | Tiempo | Prioridad |
 |---|-------|--------|-----------|
-| 1 | Crear cliente HTTP para API Mercadona | 2 días | Alta |
-| 2 | Implementar endpoints: categorías, productos, búsqueda | 2 días | Alta |
+| 1 | **Arquitectura base extensible** | 2 días | Alta |
+|   | - Definir interfaces (SupermarketAdapter, NormalizedProduct) | | |
+|   | - Crear SupermarketFactory | | |
+|   | - Estructura de carpetas | | |
+| 2 | **Implementar MercadonaAdapter** | 2 días | Alta |
+|   | - Cliente HTTP con rate limiting | | |
+|   | - Métodos: search, getProduct, getCategories | | |
+|   | - Normalización de respuestas | | |
 | 3 | Cache con Redis (o en memoria para MVP) | 1 día | Alta |
 | 4 | Sincronización de catálogo (job nocturno) | 2 días | Media |
-| 5 | Mapeo ingredientes MealMate → productos Mercadona | 3 días | Alta |
+| 5 | **Servicio de mapeo ingredientes → productos** | 3 días | Alta |
+|   | - Búsqueda fuzzy por nombre | | |
+|   | - Cache de mapeos conocidos | | |
+|   | - UI para corrección manual (futuro) | | |
 | 6 | API interna para consultar precios desde UI | 1 día | Alta |
 | 7 | Mostrar precios reales en lista de compra | 2 días | Alta |
 | 8 | Fallback a precios estimados si falla | 1 día | Media |
 | 9 | Tests e2e y monitorización | 2 días | Media |
+
+**Nota:** La arquitectura extensible permite añadir Carrefour, DIA, etc. en Fase 2 sin cambios en el core.
 
 **Endpoints a implementar en MealMate:**
 ```
