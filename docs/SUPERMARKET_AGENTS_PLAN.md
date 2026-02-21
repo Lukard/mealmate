@@ -172,7 +172,7 @@
 
 | Agente | Estado | Fecha inicio | Fecha fin |
 |--------|--------|--------------|-----------|
-| architect | ⏳ Pendiente | - | - |
+| architect | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | mercadona-adapter | ⏳ Pendiente | - | - |
 | cache-service | ⏳ Pendiente | - | - |
 | ingredient-mapper | ⏳ Pendiente | - | - |
