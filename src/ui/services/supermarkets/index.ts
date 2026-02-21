@@ -40,8 +40,8 @@ export {
 // Base adapter (for extending)
 export { BaseAdapter } from './adapters/base.adapter';
 
-// Re-export adapters as they're created
-// export { MercadonaAdapter } from './adapters/mercadona.adapter';
+// Adapters
+export { MercadonaAdapter } from './adapters/mercadona.adapter';
 
 /**
  * Initialize the supermarket service with default configuration
@@ -57,10 +57,23 @@ export function initializeSupermarketService(config?: {
     factory.setDefaultConfig({ postalCode: config.postalCode });
   }
 
-  // Register adapters here as they're created
-  // Example:
-  // import { MercadonaAdapter } from './adapters/mercadona.adapter';
-  // factory.registerAdapter('mercadona', MercadonaAdapter);
+  // Register adapters
+  // Dynamically import to avoid circular dependencies
+  import('./adapters/mercadona.adapter').then(({ MercadonaAdapter }) => {
+    factory.registerAdapter('mercadona', MercadonaAdapter);
+    console.log('[Supermarket Service] Mercadona adapter registered');
+  });
   
   console.log('[Supermarket Service] Initialized');
+}
+
+/**
+ * Register all adapters synchronously (for SSR/API routes)
+ */
+export function registerAllAdapters(): void {
+  const factory = Factory.getInstance();
+  
+  // Import synchronously for server-side usage
+  const { MercadonaAdapter } = require('./adapters/mercadona.adapter');
+  factory.registerAdapter('mercadona', MercadonaAdapter);
 }
