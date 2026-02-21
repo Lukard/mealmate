@@ -177,7 +177,7 @@
 | cache-service | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | ingredient-mapper | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | sync-worker | ✅ Completado | 2026-02-21 | 2026-02-21 |
-| api-endpoints | ⏳ Pendiente | - | - |
+| api-endpoints | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | ui-integration | ⏳ Pendiente | - | - |
 | testing-qa | ⏳ Pendiente | - | - |
 
