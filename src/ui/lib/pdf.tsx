@@ -11,45 +11,59 @@ import {
 import type { GroceryItem, GroceryList, WeeklyMealPlan, MealItem, DayPlan } from './store';
 
 /**
+ * Convert blob to base64 data URL
+ */
+function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
  * Cross-browser compatible blob download
- * Arc Browser has issues with programmatic link clicks, so we use alternatives
+ * Arc Browser has issues with blob URLs, so we use data URLs as fallback
  */
 async function downloadBlob(blob: Blob, filename: string): Promise<void> {
-  const url = URL.createObjectURL(blob);
+  // Try standard blob URL approach first
+  const blobUrl = URL.createObjectURL(blob);
   
-  // Detect Arc Browser (contains "Arc" in userAgent or has Arc-specific properties)
-  const isArc = navigator.userAgent.includes('Arc') || 
-                (window as unknown as { arc?: unknown }).arc !== undefined;
+  const link = document.createElement('a');
+  link.style.display = 'none';
+  link.download = filename;
   
-  if (isArc) {
-    // Arc Browser: Open in new tab and let user save manually
-    // Or use the download attribute with a slight delay
-    const newWindow = window.open(url, '_blank');
-    if (newWindow) {
-      // Give Arc time to process, then suggest download
-      setTimeout(() => {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }, 100);
+  // Check if we're in a problematic browser (Arc, etc.)
+  // Arc doesn't properly identify itself, so we try blob first and fallback
+  const useDataUrl = /Arc|Edg/.test(navigator.userAgent) || 
+                     typeof (window as unknown as { arc?: unknown }).arc !== 'undefined';
+  
+  if (useDataUrl) {
+    // Use data URL for Arc and other problematic browsers
+    try {
+      const dataUrl = await blobToDataUrl(blob);
+      link.href = dataUrl;
+    } catch {
+      // Fallback to blob URL if data URL fails
+      link.href = blobUrl;
     }
   } else {
-    // Standard browsers: Direct download
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    link.href = blobUrl;
   }
   
-  // Cleanup after a delay to ensure download starts
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  document.body.appendChild(link);
+  
+  // Use a timeout to ensure the link is in the DOM
+  await new Promise(resolve => setTimeout(resolve, 0));
+  
+  link.click();
+  
+  // Cleanup
+  setTimeout(() => {
+    document.body.removeChild(link);
+    URL.revokeObjectURL(blobUrl);
+  }, 1000);
 }
 
 // Mapeo de categoría → emoji
