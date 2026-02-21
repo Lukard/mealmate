@@ -10,6 +10,48 @@ import {
 } from '@react-pdf/renderer';
 import type { GroceryItem, GroceryList, WeeklyMealPlan, MealItem, DayPlan } from './store';
 
+/**
+ * Cross-browser compatible blob download
+ * Arc Browser has issues with programmatic link clicks, so we use alternatives
+ */
+async function downloadBlob(blob: Blob, filename: string): Promise<void> {
+  const url = URL.createObjectURL(blob);
+  
+  // Detect Arc Browser (contains "Arc" in userAgent or has Arc-specific properties)
+  const isArc = navigator.userAgent.includes('Arc') || 
+                (window as unknown as { arc?: unknown }).arc !== undefined;
+  
+  if (isArc) {
+    // Arc Browser: Open in new tab and let user save manually
+    // Or use the download attribute with a slight delay
+    const newWindow = window.open(url, '_blank');
+    if (newWindow) {
+      // Give Arc time to process, then suggest download
+      setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }, 100);
+    }
+  } else {
+    // Standard browsers: Direct download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  
+  // Cleanup after a delay to ensure download starts
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
 // Mapeo de categoría → emoji
 const categoryEmojis: Record<string, string> = {
   'Frutas': '🍎',
@@ -310,20 +352,8 @@ export async function generateGroceryListPDF(
     />
   ).toBlob();
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  
-  // Nombre del archivo con fecha
   const today = new Date().toISOString().split('T')[0];
-  link.download = `lista-compra-mealmate-${today}.pdf`;
-  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  // Limpiar URL del blob
-  URL.revokeObjectURL(url);
+  await downloadBlob(blob, `lista-compra-mealmate-${today}.pdf`);
 }
 
 export { GroceryListPDF };
@@ -579,19 +609,8 @@ const MealPlanPDF = ({ mealPlan }: MealPlanPDFProps) => {
 export async function generateMealPlanPDF(mealPlan: WeeklyMealPlan): Promise<void> {
   const blob = await pdf(<MealPlanPDF mealPlan={mealPlan} />).toBlob();
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  
-  // Nombre del archivo con fecha de inicio de semana
   const weekStart = new Date(mealPlan.weekStartDate).toISOString().split('T')[0];
-  link.download = `plan-comidas-mealmate-${weekStart}.pdf`;
-  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  URL.revokeObjectURL(url);
+  await downloadBlob(blob, `plan-comidas-mealmate-${weekStart}.pdf`);
 }
 
 export { MealPlanPDF };
