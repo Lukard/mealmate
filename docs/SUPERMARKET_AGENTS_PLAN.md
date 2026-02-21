@@ -178,7 +178,7 @@
 | ingredient-mapper | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | sync-worker | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | api-endpoints | ✅ Completado | 2026-02-21 | 2026-02-21 |
-| ui-integration | ⏳ Pendiente | - | - |
+| ui-integration | ✅ Completado | 2026-02-21 | 2026-02-21 |
 | testing-qa | ⏳ Pendiente | - | - |
 
 ---
