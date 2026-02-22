@@ -121,3 +121,4 @@ src/extension/.plasmo/
 .claude-flow/sessions/
 .claude-flow/memory/
 src/api/.env.production
+.vercel
