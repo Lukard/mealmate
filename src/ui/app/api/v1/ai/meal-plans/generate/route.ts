@@ -186,9 +186,9 @@ function buildProductContext(products: ProductForContext[]): string {
 const RAG_SYSTEM_PROMPT = `Eres un nutricionista y chef experto especializado en planificación de comidas para familias españolas.
 
 REGLAS CRÍTICAS:
-1. USA PREFERENTEMENTE los productos de la lista "PRODUCTOS DISPONIBLES" proporcionada
-2. Los ingredientes de cada receta DEBEN corresponder a productos reales de la lista cuando sea posible
-3. Para ingredientes básicos (sal, agua, aceite, especias comunes) puedes asumir que están disponibles
+1. USA EXCLUSIVAMENTE los productos de la lista "PRODUCTOS DISPONIBLES" proporcionada
+2. Los ingredientes de cada receta DEBEN ser productos de la lista - usa los nombres EXACTOS
+3. Solo para ingredientes básicos (sal, agua, pimienta) puedes asumir que están disponibles sin estar en la lista
 4. Genera recetas DIFERENTES cada día - NO repitas platos
 5. SOLO incluye las comidas que el usuario solicite
 6. Alterna entre carne, pescado, legumbres, huevos y verduras
@@ -236,6 +236,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const requestStart = Date.now();
     const body: MealPlanRequest = await request.json();
     const { startDate, endDate, preferences } = body;
 
@@ -291,7 +292,7 @@ OBJETIVOS DE SALUD:
 OBSERVACIONES ADICIONALES:
 ${additionalNotes}
 
-${productContext ? 'Usa PREFERENTEMENTE los productos de la lista proporcionada arriba.' : ''}
+${productContext ? 'IMPORTANTE: Usa EXCLUSIVAMENTE los productos de la lista proporcionada. Usa los nombres exactos tal como aparecen.' : ''}
 Genera el plan en formato JSON siguiendo exactamente el schema indicado.`;
 
     // Call Groq API
@@ -383,7 +384,7 @@ Genera el plan en formato JSON siguiendo exactamente el schema indicado.`;
         generationMetadata: {
           modelUsed: GROQ_MODEL,
           tokensUsed: groqData.usage?.total_tokens || 0,
-          latencyMs: Date.now(),
+          latencyMs: Date.now() - requestStart,
           ragProductCount: productCount,
         },
       },
