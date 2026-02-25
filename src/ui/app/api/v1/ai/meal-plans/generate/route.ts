@@ -132,7 +132,7 @@ async function searchProductsFTS(queries: string[]): Promise<ProductForContext[]
 // Diversify products across categories
 // ============================================
 
-function diversifyProducts(products: ProductForContext[], maxPerCategory: number = 8, totalMax: number = 80): ProductForContext[] {
+function diversifyProducts(products: ProductForContext[], maxPerCategory: number = 8, totalMax: number = 80, healthGoals: string[] = []): ProductForContext[] {
   const byCategory = new Map<string, ProductForContext[]>();
   
   // Filter out non-food categories
@@ -141,16 +141,64 @@ function diversifyProducts(products: ProductForContext[], maxPerCategory: number
     'Maquillaje', 'Perfumería', 'Cuidado facial', 'Cuidado del cabello',
   ]);
 
+  // Categories to deprioritize (move to end, fewer slots)
+  const deprioritizeCategories = new Set([
+    'Pizzas y platos preparados', 'Platos preparados',
+    'Congelados',
+  ]);
+
+  // Keywords indicating processed/prepared products to filter out for healthy goals
+  const processedKeywords = [
+    'empanado', 'empanada', 'empanadas', 'precocinado', 'precocinada',
+    'preparado', 'preparada', 'ultracongelado', 'ultracongelada',
+    'rebozado', 'rebozada', 'marinada', 'marinadas', 'marinado',
+    'nugget', 'nuggets', 'croqueta', 'croquetas', 'surimi',
+    'palito de cangrejo', 'varitas', 'fingers',
+  ];
+
+  const wantsHealthy = healthGoals.some(g => 
+    ['balanced', 'whole-foods', 'weight-loss', 'high-protein', 'low-carb', 'heart-healthy'].includes(g)
+  );
+
+  // Fresh categories to prioritize
+  const freshCategories = new Set([
+    'Carne', 'Marisco y pescado', 'Fruta y verdura', 'Frutas y verduras',
+    'Huevos, leche y mantequilla', 'Arroz, legumbres y pasta',
+    'Verdura y fruta', 'Pescado y marisco',
+  ]);
+
   for (const p of products) {
     const cat = p.category || 'Otros';
     if (excludeCategories.has(cat)) continue;
+    
+    // For healthy goals, exclude processed product categories entirely
+    if (wantsHealthy && deprioritizeCategories.has(cat)) continue;
+    
+    // For healthy goals, filter out products with processed keywords in name
+    if (wantsHealthy) {
+      const nameLower = p.name.toLowerCase();
+      if (processedKeywords.some(kw => nameLower.includes(kw))) continue;
+    }
+    
     if (!byCategory.has(cat)) byCategory.set(cat, []);
     byCategory.get(cat)!.push(p);
   }
 
+  // Prioritize fresh categories
   const result: ProductForContext[] = [];
-  for (const [, prods] of byCategory) {
-    result.push(...prods.slice(0, maxPerCategory));
+  const freshMax = wantsHealthy ? maxPerCategory + 2 : maxPerCategory;
+  
+  // First: fresh categories
+  for (const [cat, prods] of byCategory) {
+    if (freshCategories.has(cat)) {
+      result.push(...prods.slice(0, freshMax));
+    }
+  }
+  // Then: other categories
+  for (const [cat, prods] of byCategory) {
+    if (!freshCategories.has(cat)) {
+      result.push(...prods.slice(0, maxPerCategory));
+    }
   }
 
   return result.slice(0, totalMax);
@@ -188,12 +236,20 @@ const RAG_SYSTEM_PROMPT = `Eres un nutricionista y chef experto especializado en
 REGLAS CRÍTICAS:
 1. USA EXCLUSIVAMENTE los productos de la lista "PRODUCTOS DISPONIBLES" proporcionada
 2. Los ingredientes de cada receta DEBEN ser productos de la lista - usa los nombres EXACTOS
-3. Solo para ingredientes básicos (sal, agua, pimienta) puedes asumir que están disponibles sin estar en la lista
+3. Solo para ingredientes básicos (sal, agua, pimienta, aceite) puedes asumir que están disponibles sin estar en la lista
 4. Genera recetas DIFERENTES cada día - NO repitas platos
 5. SOLO incluye las comidas que el usuario solicite
 6. Alterna entre carne, pescado, legumbres, huevos y verduras
 7. Respeta el tiempo de preparación máximo
 8. RESPETA los objetivos de salud del usuario
+
+REGLAS DE RECETAS (MUY IMPORTANTE):
+- Genera RECETAS REALES para cocinar desde cero, NO sugieras productos preparados/precocinados del supermercado
+- Los ingredientes deben ser MATERIAS PRIMAS frescas: carne cruda, pescado fresco, verduras frescas, legumbres secas, etc.
+- NUNCA uses como ingrediente un plato ya preparado (empanados, croquetas, pizzas, lasañas congeladas, platos preparados)
+- Las instrucciones deben ser PASOS DE COCINA REALES: cortar, sofreír, hervir, hornear, etc.
+- NO sirve "calentar en microondas" o "seguir instrucciones del envase" como instrucción
+- Si el usuario busca alimentación saludable, prioriza ingredientes frescos y evita ultraprocesados
 
 Formato de respuesta (JSON estricto):
 {
@@ -268,7 +324,7 @@ export async function POST(request: NextRequest) {
     try {
       const queries = expandQueries(mealKeys, healthGoals, days);
       const rawProducts = await searchProductsFTS(queries);
-      const products = diversifyProducts(rawProducts);
+      const products = diversifyProducts(rawProducts, 8, 80, healthGoals);
       productContext = buildProductContext(products);
       productCount = products.length;
       console.log(`RAG: Found ${productCount} products for context`);
